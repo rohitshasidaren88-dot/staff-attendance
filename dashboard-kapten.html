@@ -141,74 +141,107 @@
         }
 
         // ==================== RENDER SHIFT KAPTEN ====================
-        function renderShiftKapten() {
-            const container = document.getElementById('shiftKaptenContainer');
-            if (!container) return;
-            
-            const startDate = document.getElementById('kaptenStartDate').value;
-            const endDate = document.getElementById('kaptenEndDate').value;
-            
-            let html = '<div class="date-selector"><label>Periode: <strong>' + startDate + ' - ' + endDate + '</strong></label></div>';
-            html += '<div class="shift-section"><div class="shift-title">SIFT KAPTEN</div><table class="shift-table"><thead> <th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th> </thead><tbody>';
-            
-            const kaptenList = [
-                { name: "EDOLI MANULLANG", checkIn: "08:00:00", checkOut: "18:00:00", jadwal: "PAGI" },
-                { name: "AINI NADIAH", checkIn: "11:45:00", checkOut: "22:00:00", jadwal: "SIANG" },
-                { name: "AGIL PRAYETNO", checkIn: "14:45:00", checkOut: "02:00:00", jadwal: "SORE 1" },
-                { name: "AGUS SUDIANTO", checkIn: "15:45:00", checkOut: "02:00:00", jadwal: "SORE 2" },
-                { name: "ROBY SUGARA", checkIn: "21:45:00", checkOut: "08:00:00", jadwal: "MALAM" },
-                { name: "JULIO YESAYAS NABABAN", checkIn: "08:00:00", checkOut: "18:00:00", jadwal: "PAGI" }
-            ];
-            
-            for (let i = 0; i < kaptenList.length; i++) {
-                const s = kaptenList[i];
-                html += ' <td><select class="kapten-staff">' + staffData.kapten.map(n => `<option value="${n}" ${n === s.name ? 'selected' : ''}>${n}</option>`).join('') + '</select></td>';
-                html += '<td><input type="time" value="' + s.checkIn + '"></td>';
-                html += '<td><input type="time" value="' + s.checkOut + '"></td>';
-                html += '<td>' + s.jadwal + '</td> </tr>';
-            }
-            html += '</tbody></table></div>';
-            container.innerHTML = html;
-        }
+function renderShiftKapten() {
+    console.log("renderShiftKapten dipanggil");
+    const container = document.getElementById('shiftKaptenContainer');
+    if (!container) {
+        console.log("Container shiftKaptenContainer tidak ditemukan");
+        return;
+    }
+    
+    const startDate = document.getElementById('kaptenStartDate').value;
+    const endDate = document.getElementById('kaptenEndDate').value;
+    
+    let html = '<div class="date-selector"><label>Periode: <strong>' + startDate + ' - ' + endDate + '</strong></label></div>';
+    html += '<div class="shift-section"><div class="shift-title">SIFT KAPTEN</div><table class="shift-table"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th></tr></thead><tbody>';
+    
+    const kaptenList = [
+        { name: "EDOLI MANULLANG", checkIn: "08:00:00", checkOut: "18:00:00", jadwal: "PAGI" },
+        { name: "AINI NADIAH", checkIn: "11:45:00", checkOut: "22:00:00", jadwal: "SIANG" },
+        { name: "AGIL PRAYETNO", checkIn: "14:45:00", checkOut: "02:00:00", jadwal: "SORE 1" },
+        { name: "AGUS SUDIANTO", checkIn: "15:45:00", checkOut: "02:00:00", jadwal: "SORE 2" },
+        { name: "ROBY SUGARA", checkIn: "21:45:00", checkOut: "08:00:00", jadwal: "MALAM" },
+        { name: "JULIO YESAYAS NABABAN", checkIn: "08:00:00", checkOut: "18:00:00", jadwal: "PAGI" }
+    ];
+    
+    for (let i = 0; i < kaptenList.length; i++) {
+        const s = kaptenList[i];
+        html += '<tr>';
+        html += '<td><select class="kapten-staff">' + staffData.kapten.map(n => `<option value="${n}" ${n === s.name ? 'selected' : ''}>${n}</option>`).join('') + '</select></td>';
+        html += '<td><input type="time" value="' + s.checkIn + '"></td>';
+        html += '<td><input type="time" value="' + s.checkOut + '"></td>';
+        html += '<td>' + s.jadwal + '</td>';
+        html += '</tr>';
+    }
+    html += '</tbody></table></div>';
+    
+    container.innerHTML = html;
+    console.log("renderShiftKapten selesai");
+}
 
-        // ==================== RENDER SHIFT KASIR ====================
-        function renderShiftKasir() {
-            const container = document.getElementById('shiftKasirContainer');
-            if (!container) return;
-            
-            const startDate = document.getElementById('kasirStartDate').value;
-            const endDate = document.getElementById('kasirEndDate').value;
-            
-            let html = '<div class="date-selector"><label>Periode: <strong>' + startDate + ' - ' + endDate + '</strong></label></div>';
-            html += '<div class="shift-section"><div class="shift-title">SIFT KASIR</div><table class="shift-table"><thead> <th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th> </thead><tbody>';
-            
-            const kasirList = [
-                { name: "PAJAR WIRATAMA SARAGIH", checkIn: "07:45:00", checkOut: "18:00:00", jadwal: "Shift 1" },
-                { name: "HERRY SYAPUTRA", checkIn: "09:45:00", checkOut: "20:00:00", jadwal: "Shift 2" },
-                { name: "EFRANTA", checkIn: "11:45:00", checkOut: "22:00:00", jadwal: "Shift 3" },
-                { name: "ADRIAN PATRIC PRESLY SIMARMATA", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 4" },
-                { name: "SYOFIAH", checkIn: "14:45:00", checkOut: "01:00:00", jadwal: "Shift 5" },
-                { name: "GRACE ANGGAWAN HUTABARAT", checkIn: "17:45:00", checkOut: "04:00:00", jadwal: "Shift 6" },
-                { name: "DIXIELIA", checkIn: "21:45:00", checkOut: "08:00:00", jadwal: "Shift 7" },
-                { name: "KELVIN ADRIAN HRP", checkIn: "07:45:00", checkOut: "20:00:00", jadwal: "Shift 8" },
-                { name: "MUHAMMAD KHAIRIL", checkIn: "09:45:00", checkOut: "22:00:00", jadwal: "Shift 9" },
-                { name: "NATASYA NABILA", checkIn: "11:45:00", checkOut: "00:00:00", jadwal: "Shift 10" },
-                { name: "MUHAMMAD NUR RASYDI", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 11" },
-                { name: "MHD RANGGA PRADINATA", checkIn: "17:45:00", checkOut: "06:00:00", jadwal: "Shift 12" },
-                { name: "SONIYA", checkIn: "19:45:00", checkOut: "08:00:00", jadwal: "Shift 13" }
-            ];
-            
-            for (let i = 0; i < kasirList.length; i++) {
-                const s = kasirList[i];
-                html += ' <td><select class="kasir-staff">' + staffData.kasir.map(n => `<option value="${n}" ${n === s.name ? 'selected' : ''}>${n}</option>`).join('') + '</select></td>';
-                html += '<td><input type="time" value="' + s.checkIn + '"></td>';
-                html += '<td><input type="time" value="' + s.checkOut + '"></td>';
-                html += '<td>' + s.jadwal + '</td> </tr>';
-            }
-            html += '</tbody></table></div>';
-            container.innerHTML = html;
-        }
-
+// ==================== RENDER SHIFT KASIR ====================
+function renderShiftKasir() {
+    console.log("renderShiftKasir dipanggil");
+    const container = document.getElementById('shiftKasirContainer');
+    if (!container) {
+        console.log("Container shiftKasirContainer tidak ditemukan");
+        return;
+    }
+    
+    const startDate = document.getElementById('kasirStartDate').value;
+    const endDate = document.getElementById('kasirEndDate').value;
+    
+    let html = '<div class="date-selector"><label>Periode: <strong>' + startDate + ' - ' + endDate + '</strong></label></div>';
+    html += '<div class="shift-section"><div class="shift-title">SIFT KASIR</div><table class="shift-table"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th></tr></thead><tbody>';
+    
+    const kasirList = [
+        { name: "PAJAR WIRATAMA SARAGIH", checkIn: "07:45:00", checkOut: "18:00:00", jadwal: "Shift 1" },
+        { name: "HERRY SYAPUTRA", checkIn: "09:45:00", checkOut: "20:00:00", jadwal: "Shift 2" },
+        { name: "EFRANTA", checkIn: "11:45:00", checkOut: "22:00:00", jadwal: "Shift 3" },
+        { name: "ADRIAN PATRIC PRESLY SIMARMATA", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 4" },
+        { name: "SYOFIAH", checkIn: "14:45:00", checkOut: "01:00:00", jadwal: "Shift 5" },
+        { name: "GRACE ANGGAWAN HUTABARAT", checkIn: "17:45:00", checkOut: "04:00:00", jadwal: "Shift 6" },
+        { name: "DIXIELIA", checkIn: "21:45:00", checkOut: "08:00:00", jadwal: "Shift 7" },
+        { name: "KELVIN ADRIAN HRP", checkIn: "07:45:00", checkOut: "20:00:00", jadwal: "Shift 8" },
+        { name: "MUHAMMAD KHAIRIL", checkIn: "09:45:00", checkOut: "22:00:00", jadwal: "Shift 9" },
+        { name: "NATASYA NABILA", checkIn: "11:45:00", checkOut: "00:00:00", jadwal: "Shift 10" },
+        { name: "MUHAMMAD NUR RASYDI", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 11" },
+        { name: "MHD RANGGA PRADINATA", checkIn: "17:45:00", checkOut: "06:00:00", jadwal: "Shift 12" },
+        { name: "SONIYA", checkIn: "19:45:00", checkOut: "08:00:00", jadwal: "Shift 13" },
+        { name: "KRISTIN AUDIA SITUMORANG", checkIn: "07:45:00", checkOut: "18:00:00", jadwal: "Shift 14" },
+        { name: "ABELLIA AMANDA", checkIn: "09:45:00", checkOut: "20:00:00", jadwal: "Shift 15" },
+        { name: "PUTRI GUSVINA", checkIn: "11:45:00", checkOut: "22:00:00", jadwal: "Shift 16" },
+        { name: "ADAM DANY PUTRA", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 17" },
+        { name: "FRAYOGA HARIANJA", checkIn: "14:45:00", checkOut: "01:00:00", jadwal: "Shift 18" },
+        { name: "JENNY SAWITRI", checkIn: "17:45:00", checkOut: "04:00:00", jadwal: "Shift 19" },
+        { name: "DENNY ANDRIAN", checkIn: "21:45:00", checkOut: "08:00:00", jadwal: "Shift 20" },
+        { name: "YOGES SUARA", checkIn: "07:45:00", checkOut: "20:00:00", jadwal: "Shift 21" },
+        { name: "RIDUWAN EFENDI", checkIn: "09:45:00", checkOut: "22:00:00", jadwal: "Shift 22" },
+        { name: "MELITA", checkIn: "11:45:00", checkOut: "00:00:00", jadwal: "Shift 23" },
+        { name: "RYAN PERMANA", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 24" },
+        { name: "TENGKU FAREL DAVILA RUSLI", checkIn: "17:45:00", checkOut: "06:00:00", jadwal: "Shift 25" },
+        { name: "CIPTO", checkIn: "19:45:00", checkOut: "08:00:00", jadwal: "Shift 26" },
+        { name: "JOKO PURNOMO", checkIn: "07:45:00", checkOut: "18:00:00", jadwal: "Shift 27" },
+        { name: "KAU SALYA", checkIn: "09:45:00", checkOut: "20:00:00", jadwal: "Shift 28" },
+        { name: "SOPHEAP VISAL", checkIn: "11:45:00", checkOut: "22:00:00", jadwal: "Shift 29" },
+        { name: "LEA SREY MEY", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 30" },
+        { name: "CHEA AK RUN", checkIn: "14:45:00", checkOut: "01:00:00", jadwal: "Shift 31" }
+    ];
+    
+    for (let i = 0; i < kasirList.length; i++) {
+        const s = kasirList[i];
+        html += '<tr>';
+        html += '<td><select class="kasir-staff">' + staffData.kasir.map(n => `<option value="${n}" ${n === s.name ? 'selected' : ''}>${n}</option>`).join('') + '</select></td>';
+        html += '<td><input type="time" value="' + s.checkIn + '"></td>';
+        html += '<td><input type="time" value="' + s.checkOut + '"></td>';
+        html += '<td>' + s.jadwal + '</td>';
+        html += '</tr>';
+    }
+    html += '</tbody></table></div>';
+    
+    container.innerHTML = html;
+    console.log("renderShiftKasir selesai");
+}
         function markFinePaid(name) {
             if (fineData[name] && !fineData[name].paid) {
                 Swal.fire({
