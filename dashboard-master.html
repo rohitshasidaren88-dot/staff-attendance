@@ -553,7 +553,8 @@ function renderShiftCS() {
             }
         }
 
-        function switchPage(pageId) {
+        function switchPage(p){
+    console.log("switchPage dipanggil dengan page:", p);
             const pages = ['dashboard', 'attendance', 'shiftCs', 'shiftKapten', 'shiftKasir', 'absent'];
             for (let i = 0; i < pages.length; i++) {
                 const el = document.getElementById(pages[i] + 'Page');
@@ -598,14 +599,15 @@ function renderShiftCS() {
             renderDashboard();
             
             const menuItems = document.querySelectorAll('.menu-item');
-            for (let i = 0; i < menuItems.length; i++) {
-                menuItems[i].addEventListener('click', function() {
-                    const page = this.getAttribute('data-page');
-                    if (page) switchPage(page);
-                    for (let j = 0; j < menuItems.length; j++) menuItems[j].classList.remove('active');
-                    this.classList.add('active');
-                });
-            }
+for (let i = 0; i < menuItems.length; i++) {
+    menuItems[i].onclick = function() {
+        const page = this.getAttribute('data-page');
+        if (page) switchPage(page);
+        // hapus class active dari semua, lalu tambahkan ke ini
+        document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+        this.classList.add('active');
+    };
+}
             
             document.getElementById('logoutBtn')?.addEventListener('click', logout);
             document.getElementById('logoutTopBtn')?.addEventListener('click', logout);
