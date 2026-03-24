@@ -3,19 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Staff Attendance System - Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Efek login page tambahan */
+        .login-page {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glitter-star {
+            position: absolute;
+            background: radial-gradient(circle, rgba(196,169,98,0.8), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: starFloat 8s ease-in-out infinite;
+        }
+        
+        @keyframes starFloat {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            20% { opacity: 0.8; }
+            80% { opacity: 0.8; }
+            100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+        }
+    </style>
 </head>
 <body>
-    <!-- HALAMAN LOGIN -->
     <div id="loginPage" class="login-page">
         <div class="login-card">
-            <div class="logo-icon">
-                <i class="fas fa-users"></i>
-            </div>
+            <div class="logo-icon"><i class="fas fa-users"></i></div>
             <h1>Staff Attendance System</h1>
             <p class="subtitle">Premium Management System</p>
             
@@ -43,6 +61,67 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Data Users
+        const users = [
+            { email: "master@attendance.com", password: "master123", role: "master", fullname: "Master Admin" },
+            { email: "cs@attendance.com", password: "cs123", role: "cs", fullname: "CS User" },
+            { email: "kapten@attendance.com", password: "kapten123", role: "kapten", fullname: "Kapten User" }
+        ];
+
+        // Efek Glitter di Login Page
+        function createLoginGlitter() {
+            const loginPage = document.querySelector('.login-page');
+            if (!loginPage) return;
+            
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'glitter-star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = (Math.random() * 4 + 1) + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 8 + 's';
+                star.style.animationDuration = (Math.random() * 6 + 4) + 's';
+                loginPage.appendChild(star);
+            }
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const errorDiv = document.getElementById('loginError');
+            
+            errorDiv.style.display = 'none';
+            
+            if (!email || !password) {
+                errorDiv.innerHTML = '⚠️ Email dan password harus diisi!';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (!user) {
+                errorDiv.innerHTML = '⚠️ Email atau password salah!<br>Coba: master@attendance.com / master123';
+                errorDiv.style.display = 'block';
+                document.getElementById('loginPassword').value = '';
+                return;
+            }
+            
+            sessionStorage.setItem('currentUser', JSON.stringify(user));
+            
+            if (user.role === 'master') window.location.href = 'dashboard-master.html';
+            else if (user.role === 'cs') window.location.href = 'dashboard-cs.html';
+            else if (user.role === 'kapten') window.location.href = 'dashboard-kapten.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            createLoginGlitter();
+            document.getElementById('loginButton').addEventListener('click', handleLogin);
+            document.getElementById('loginPassword').addEventListener('keypress', (e) => { if (e.key === 'Enter') handleLogin(); });
+            document.getElementById('loginEmail').addEventListener('keypress', (e) => { if (e.key === 'Enter') handleLogin(); });
+        });
+    </script>
 </body>
 </html>
