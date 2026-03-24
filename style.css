@@ -599,34 +599,141 @@ th {
     color: var(--text-primary);
 }
 
+/* ==================== SHIFT TABLE STYLES ==================== */
 .shift-section {
     margin-bottom: 30px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
+    background: var(--bg-secondary);
+    border-radius: 16px;
     overflow: hidden;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border);
 }
 
 .shift-title {
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: white;
-    padding: 10px 15px;
+    padding: 12px 20px;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.shift-title i {
+    font-size: 18px;
+}
+
+.shift-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.shift-table th {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 13px;
+    border-bottom: 2px solid var(--primary);
+}
+
+.shift-table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.shift-table select, 
+.shift-table input {
+    width: 95%;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 13px;
+}
+
+.shift-table select:focus, 
+.shift-table input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(196, 169, 98, 0.2);
 }
 
 .date-selector {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
+    background: var(--bg-secondary);
+    padding: 15px 20px;
+    border-radius: 16px;
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    border: 1px solid var(--border);
+}
+
+.date-selector label {
+    font-weight: 500;
+    color: var(--text-secondary);
 }
 
 .date-selector input {
     padding: 8px 12px;
     border: 1px solid var(--border);
     border-radius: 8px;
-    background: var(--bg-secondary);
+    background: var(--bg-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .shift-table {
+        font-size: 12px;
+        min-width: 600px;
+    }
+    
+    .shift-table th, 
+    .shift-table td {
+        padding: 8px 6px;
+    }
+    
+    .shift-table select, 
+    .shift-table input {
+        width: 100%;
+        font-size: 11px;
+        padding: 6px;
+    }
+    
+    .date-selector {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+/* Responsive */
+@media (max-width: 768px) {
+    .shift-table {
+        font-size: 12px;
+        min-width: 600px;
+    }
+    
+    .shift-table th, 
+    .shift-table td {
+        padding: 8px 6px;
+    }
+    
+    .shift-table select, 
+    .shift-table input {
+        width: 100%;
+        font-size: 11px;
+        padding: 6px;
+    }
+    
+    .date-selector {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
 
 /* ==================== BADGES ==================== */
@@ -836,117 +943,5 @@ h4 {
     
     th, td {
         padding: 8px;
-    }
-}
-/* ==================== SHIFT TABLE STYLES ==================== */
-.shift-section {
-    margin-bottom: 30px;
-    background: var(--bg-secondary);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: var(--card-shadow);
-    border: 1px solid var(--border);
-}
-
-.shift-title {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    color: white;
-    padding: 12px 20px;
-    font-weight: 600;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.shift-title i {
-    font-size: 18px;
-}
-
-.shift-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.shift-table th {
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    padding: 12px;
-    text-align: center;
-    font-weight: 600;
-    font-size: 13px;
-    border-bottom: 2px solid var(--primary);
-}
-
-.shift-table td {
-    padding: 10px;
-    text-align: center;
-    border-bottom: 1px solid var(--border);
-}
-
-.shift-table select, 
-.shift-table input {
-    width: 95%;
-    padding: 8px 10px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    font-size: 13px;
-}
-
-.shift-table select:focus, 
-.shift-table input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px rgba(196, 169, 98, 0.2);
-}
-
-.date-selector {
-    background: var(--bg-secondary);
-    padding: 15px 20px;
-    border-radius: 16px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    flex-wrap: wrap;
-    border: 1px solid var(--border);
-}
-
-.date-selector label {
-    font-weight: 500;
-    color: var(--text-secondary);
-}
-
-.date-selector input {
-    padding: 8px 12px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--bg-primary);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .shift-table {
-        font-size: 12px;
-        min-width: 600px;
-    }
-    
-    .shift-table th, 
-    .shift-table td {
-        padding: 8px 6px;
-    }
-    
-    .shift-table select, 
-    .shift-table input {
-        width: 100%;
-        font-size: 11px;
-        padding: 6px;
-    }
-    
-    .date-selector {
-        flex-direction: column;
-        align-items: flex-start;
     }
 }
