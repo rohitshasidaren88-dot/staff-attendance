@@ -17,6 +17,7 @@
     --success: #28a745;
     --danger: #dc3545;
     --warning: #ffc107;
+    --info: #17a2b8;
     --portal-open: #28a745;
     --portal-closed: #dc3545;
 }
@@ -27,6 +28,7 @@ body.dark {
     --text-primary: #eeeeee;
     --text-secondary: #aaa;
     --border: #2a2a3e;
+    --card-shadow: 0 5px 20px rgba(0,0,0,0.2);
 }
 
 body {
@@ -36,10 +38,9 @@ body {
     transition: all 0.3s ease;
     position: relative;
     overflow-x: hidden;
-    min-height: 100vh;
 }
 
-/* Background neon effect */
+/* ==================== BACKGROUND NEON EFFECT ==================== */
 body::before {
     content: '';
     position: fixed;
@@ -47,8 +48,8 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at 20% 50%, rgba(196, 169, 98, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(196, 169, 98, 0.05) 0%, transparent 50%);
+    background: radial-gradient(circle at 20% 50%, rgba(196, 169, 98, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(196, 169, 98, 0.03) 0%, transparent 50%);
     pointer-events: none;
     z-index: -1;
     animation: neonPulse 8s ease-in-out infinite;
@@ -59,7 +60,7 @@ body::before {
     50% { opacity: 0.6; }
 }
 
-/* Cursor neon effect */
+/* ==================== CURSOR NEON EFFECT ==================== */
 .cursor-neon {
     position: fixed;
     width: 30px;
@@ -77,13 +78,147 @@ body::before {
     50% { transform: scale(1.3); opacity: 0.8; }
 }
 
-/* Dashboard Layout */
+/* ==================== LOGIN PAGE GLITTER ==================== */
+.login-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a2a3a, #0f1a24);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.login-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 40%, rgba(196, 169, 98, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(196, 169, 98, 0.1) 0%, transparent 50%);
+    animation: loginGlow 10s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes loginGlow {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.login-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 32px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(196, 169, 98, 0.2);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(196, 169, 98, 0.3);
+    animation: cardGlow 3s ease-in-out infinite;
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes cardGlow {
+    0%, 100% { box-shadow: 0 0 20px rgba(196, 169, 98, 0.2); }
+    50% { box-shadow: 0 0 40px rgba(196, 169, 98, 0.4); }
+}
+
+.login-card .logo-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.login-card .logo-icon i {
+    font-size: 40px;
+    color: white;
+}
+
+.login-card h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+    color: #2c241a;
+}
+
+.login-card .subtitle {
+    color: var(--primary);
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.input-group-login {
+    position: relative;
+    margin: 15px 0;
+}
+
+.input-group-login i {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+}
+
+.input-group-login input {
+    width: 100%;
+    padding: 14px 15px 14px 48px;
+    border: 2px solid var(--border);
+    border-radius: 40px;
+    font-size: 16px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border: none;
+    border-radius: 40px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.error-msg {
+    color: var(--danger);
+    background: rgba(220,53,69,0.1);
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px 0;
+    display: none;
+}
+
+.demo-info {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* ==================== DASHBOARD ==================== */
 .dashboard {
     display: block;
     min-height: 100vh;
 }
 
-/* Sidebar Glitter Effect */
+/* ==================== SIDEBAR GLITTER EFFECT ==================== */
 .sidebar {
     width: 280px;
     background: linear-gradient(180deg, #1a2a3a, #0f1a24);
@@ -126,6 +261,7 @@ body.dark .sidebar {
     100% { transform: translate(20%, 20%) rotate(360deg); }
 }
 
+/* Glitter particles */
 .glitter-particle {
     position: absolute;
     background: rgba(196, 169, 98, 0.6);
@@ -138,7 +274,7 @@ body.dark .sidebar {
 @keyframes floatGlitter {
     0% { transform: translateY(0) scale(1); opacity: 0; }
     20% { opacity: 0.8; }
-    80% { opacity: 0.6; }
+    80% { opacity: 0.8; }
     100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
 }
 
@@ -225,7 +361,7 @@ body.dark .sidebar {
     z-index: 2;
 }
 
-/* Main Content */
+/* ==================== MAIN CONTENT ==================== */
 .main-content {
     margin-left: 280px;
     padding: 20px 30px;
@@ -272,7 +408,7 @@ body.dark .sidebar {
     cursor: pointer;
 }
 
-/* Cards with neon border */
+/* ==================== CARDS WITH NEON BORDER ==================== */
 .card {
     background: var(--bg-secondary);
     border-radius: 20px;
@@ -312,7 +448,7 @@ body.dark .sidebar {
     color: var(--primary);
 }
 
-/* Stats Grid */
+/* ==================== STATS GRID ==================== */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -334,7 +470,7 @@ body.dark .sidebar {
     color: var(--primary);
 }
 
-/* Portal Status */
+/* ==================== PORTAL STATUS ==================== */
 .portal-status {
     text-align: center;
     padding: 20px;
@@ -394,7 +530,7 @@ body.dark .sidebar {
     color: white;
 }
 
-/* Absen Button */
+/* ==================== ABSEN BUTTON ==================== */
 .absen-btn {
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: white;
@@ -412,7 +548,7 @@ body.dark .sidebar {
     transform: scale(0.98);
 }
 
-/* Tables */
+/* ==================== TABLES ==================== */
 .table-wrapper {
     overflow-x: auto;
 }
@@ -434,7 +570,7 @@ th {
     font-weight: 600;
 }
 
-/* Shift Table */
+/* Shift Table Styles */
 .shift-table {
     width: 100%;
     border-collapse: collapse;
@@ -493,7 +629,7 @@ th {
     background: var(--bg-secondary);
 }
 
-/* Badges */
+/* ==================== BADGES ==================== */
 .badge {
     display: inline-block;
     padding: 4px 12px;
@@ -504,6 +640,7 @@ th {
 
 .badge-success { background: var(--success); color: white; }
 .badge-danger { background: var(--danger); color: white; }
+.badge-warning { background: var(--warning); color: #333; }
 
 /* Fine Status */
 .fine-status {
@@ -540,7 +677,7 @@ th {
     color: white;
 }
 
-/* Mobile Menu */
+/* ==================== MOBILE MENU ==================== */
 .mobile-menu-btn {
     display: none;
     background: var(--primary);
@@ -563,7 +700,7 @@ th {
     z-index: 99;
 }
 
-/* Theme Toggle */
+/* ==================== THEME TOGGLE ==================== */
 .theme-toggle {
     position: fixed;
     bottom: 20px;
@@ -586,7 +723,7 @@ th {
     transform: scale(1.1);
 }
 
-/* Profile Header */
+/* ==================== PROFILE HEADER ==================== */
 .profile-header {
     display: flex;
     align-items: center;
@@ -609,7 +746,7 @@ th {
     color: var(--secondary);
 }
 
-/* Forms */
+/* ==================== FORMS ==================== */
 .form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -657,7 +794,7 @@ h4 {
     margin-bottom: 15px;
 }
 
-/* Responsive */
+/* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
     .mobile-menu-btn {
         display: flex;
@@ -699,5 +836,117 @@ h4 {
     
     th, td {
         padding: 8px;
+    }
+}
+/* ==================== SHIFT TABLE STYLES ==================== */
+.shift-section {
+    margin-bottom: 30px;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border);
+}
+
+.shift-title {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 12px 20px;
+    font-weight: 600;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.shift-title i {
+    font-size: 18px;
+}
+
+.shift-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.shift-table th {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 13px;
+    border-bottom: 2px solid var(--primary);
+}
+
+.shift-table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.shift-table select, 
+.shift-table input {
+    width: 95%;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 13px;
+}
+
+.shift-table select:focus, 
+.shift-table input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(196, 169, 98, 0.2);
+}
+
+.date-selector {
+    background: var(--bg-secondary);
+    padding: 15px 20px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    border: 1px solid var(--border);
+}
+
+.date-selector label {
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.date-selector input {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .shift-table {
+        font-size: 12px;
+        min-width: 600px;
+    }
+    
+    .shift-table th, 
+    .shift-table td {
+        padding: 8px 6px;
+    }
+    
+    .shift-table select, 
+    .shift-table input {
+        width: 100%;
+        font-size: 11px;
+        padding: 6px;
+    }
+    
+    .date-selector {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }
