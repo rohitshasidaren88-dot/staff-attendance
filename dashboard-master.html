@@ -555,7 +555,10 @@ function renderShiftCS() {
 
 function switchPage(p) {
     console.log("switchPage dipanggil dengan page:", p);
-    const pages = ['dashboard', 'attendance', 'shiftcs', 'shiftkapten', 'shiftkasir', 'absent'];
+    
+    // Daftar semua halaman yang ada
+    const pages = ['dashboard', 'attendance', 'shiftCs', 'shiftKapten', 'shiftKasir', 'absent'];
+    
     for (let i = 0; i < pages.length; i++) {
         const el = document.getElementById(pages[i] + 'Page');
         if (el) {
@@ -563,12 +566,23 @@ function switchPage(p) {
             console.log(pages[i] + 'Page display:', el.style.display);
         }
     }
-    // ... sisanya sama
+    
+    const titles = {
+        dashboard: 'Dashboard',
+        attendance: 'Jadwal Absen Staff',
+        shiftCs: 'SIFT CS',
+        shiftKapten: 'SIFT KAPTEN',
+        shiftKasir: 'SIFT KASIR',
+        absent: 'Data Staff Tidak Absen'
+    };
+    document.getElementById('pageTitle').innerHTML = titles[p] || 'Dashboard';
+    
+    // Panggil fungsi render yang sesuai
     if (p === 'dashboard') renderDashboard();
     if (p === 'attendance') renderAttendanceTable();
-    if (p === 'shiftcs') renderShiftCS();
-    if (p === 'shiftkapten') renderShiftKapten();
-    if (p === 'shiftkasir') renderShiftKasir();
+    if (p === 'shiftCs') renderShiftCS();
+    if (p === 'shiftKapten') renderShiftKapten();
+    if (p === 'shiftKasir') renderShiftKasir();
     if (p === 'absent') renderAbsentTable();
 }
 
