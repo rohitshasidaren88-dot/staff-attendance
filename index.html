@@ -8,30 +8,173 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Efek login page tambahan */
+        /* Login Page Full Screen dengan Glitter Emas */
         .login-page {
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
             overflow: hidden;
         }
         
-        .glitter-star {
+        /* Background glitter emas */
+        .glitter-bg {
             position: absolute;
-            background: radial-gradient(circle, rgba(196,169,98,0.8), transparent);
-            border-radius: 50%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
-            animation: starFloat 8s ease-in-out infinite;
         }
         
-        @keyframes starFloat {
-            0% { transform: translateY(0) scale(1); opacity: 0; }
-            20% { opacity: 0.8; }
-            80% { opacity: 0.8; }
-            100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+        .glitter {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,215,0,0.8), rgba(196,169,98,0.4));
+            border-radius: 50%;
+            pointer-events: none;
+            animation: glitterFloat 8s ease-in-out infinite;
+        }
+        
+        @keyframes glitterFloat {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.8;
+            }
+            80% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) scale(1.5);
+                opacity: 0;
+            }
+        }
+        
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 32px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(196, 169, 98, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(196, 169, 98, 0.5);
+            animation: cardGlow 3s ease-in-out infinite;
+            position: relative;
+            z-index: 10;
+        }
+        
+        @keyframes cardGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(196, 169, 98, 0.3); }
+            50% { box-shadow: 0 0 60px rgba(196, 169, 98, 0.6); }
+        }
+        
+        .login-card .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #c4a962, #b38f40);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(196,169,98,0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(196,169,98,0); }
+        }
+        
+        .login-card .logo-icon i {
+            font-size: 40px;
+            color: white;
+        }
+        
+        .login-card h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: #2c241a;
+        }
+        
+        .login-card .subtitle {
+            color: #c4a962;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .input-group-login {
+            position: relative;
+            margin: 15px 0;
+        }
+        
+        .input-group-login i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #c4a962;
+        }
+        
+        .input-group-login input {
+            width: 100%;
+            padding: 14px 15px 14px 48px;
+            border: 2px solid #e0d4c4;
+            border-radius: 40px;
+            font-size: 16px;
+            background: white;
+            color: #2c241a;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #c4a962, #b38f40);
+            border: none;
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(196,169,98,0.4);
+        }
+        
+        .error-msg {
+            color: #dc3545;
+            background: rgba(220,53,69,0.1);
+            padding: 10px;
+            border-radius: 10px;
+            margin: 10px 0;
+            display: none;
+        }
+        
+        .demo-info {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e0d4c4;
+            font-size: 12px;
+            color: #666;
         }
     </style>
 </head>
 <body>
     <div id="loginPage" class="login-page">
+        <div class="glitter-bg" id="glitterBg"></div>
         <div class="login-card">
             <div class="logo-icon"><i class="fas fa-users"></i></div>
             <h1>Staff Attendance System</h1>
@@ -62,30 +205,29 @@
     </div>
 
     <script>
-        // Data Users
+        // Buat efek glitter emas di background
+        function createGoldGlitter() {
+            const container = document.getElementById('glitterBg');
+            if (!container) return;
+            
+            for (let i = 0; i < 150; i++) {
+                const glitter = document.createElement('div');
+                glitter.className = 'glitter';
+                glitter.style.left = Math.random() * 100 + '%';
+                glitter.style.top = Math.random() * 100 + '%';
+                glitter.style.width = (Math.random() * 6 + 2) + 'px';
+                glitter.style.height = glitter.style.width;
+                glitter.style.animationDelay = Math.random() * 8 + 's';
+                glitter.style.animationDuration = (Math.random() * 6 + 4) + 's';
+                container.appendChild(glitter);
+            }
+        }
+        
         const users = [
             { email: "master@attendance.com", password: "master123", role: "master", fullname: "Master Admin" },
             { email: "cs@attendance.com", password: "cs123", role: "cs", fullname: "CS User" },
             { email: "kapten@attendance.com", password: "kapten123", role: "kapten", fullname: "Kapten User" }
         ];
-
-        // Efek Glitter di Login Page
-        function createLoginGlitter() {
-            const loginPage = document.querySelector('.login-page');
-            if (!loginPage) return;
-            
-            for (let i = 0; i < 50; i++) {
-                const star = document.createElement('div');
-                star.className = 'glitter-star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.width = (Math.random() * 4 + 1) + 'px';
-                star.style.height = star.style.width;
-                star.style.animationDelay = Math.random() * 8 + 's';
-                star.style.animationDuration = (Math.random() * 6 + 4) + 's';
-                loginPage.appendChild(star);
-            }
-        }
 
         function handleLogin() {
             const email = document.getElementById('loginEmail').value.trim();
@@ -117,7 +259,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            createLoginGlitter();
+            createGoldGlitter();
             document.getElementById('loginButton').addEventListener('click', handleLogin);
             document.getElementById('loginPassword').addEventListener('keypress', (e) => { if (e.key === 'Enter') handleLogin(); });
             document.getElementById('loginEmail').addEventListener('keypress', (e) => { if (e.key === 'Enter') handleLogin(); });
