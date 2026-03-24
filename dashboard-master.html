@@ -175,171 +175,106 @@
 
         function renderAbsentTable(){const t=document.getElementById('absentTableBody');if(!t)return;t.innerHTML='';[...staffData.cs,...staffData.kapten,...staffData.kasir].filter(n=>attendanceData[n]?.status!=='sudah').forEach(n=>{const f=fineData[n]||{amount:0,paid:!1},r=staffData.cs.includes(n)?'CS':(staffData.kapten.includes(n)?'KAPTEN':'KASIR');t.innerHTML+=`<tr><td>${n}</td><td>${r}</td><td><span class="badge badge-danger">BELUM ABSEN</span></td><td><span class="fine-status ${f.paid?'fine-paid':'fine-unpaid'}" onclick="markFinePaid('${n}')">${f.paid?'DONE':`${f.amount} Bath`}</span></td><td><button class="action-btn btn-edit" onclick="markFinePaid('${n}')">Bayar Denda</button></td></tr>`;});}
 
-        // ==================== RENDER SHIFT ====================
-        // ==================== RENDER SHIFT CS ====================
+       // ==================== RENDER SHIFT CS ====================
 function renderShiftCS() {
+    console.log("renderShiftCS dipanggil");
     const container = document.getElementById('shiftCsContainer');
-    if (!container) return;
+    if (!container) {
+        console.log("Container shiftCsContainer tidak ditemukan");
+        return;
+    }
     
     const startDate = document.getElementById('csStartDate').value;
     const endDate = document.getElementById('csEndDate').value;
     
-    let html = `
-        <div class="date-selector" style="margin-bottom: 20px;">
-            <label>Periode: <strong style="color: var(--primary);">${startDate} - ${endDate}</strong></label>
-        </div>
-    `;
+    let html = '<div class="date-selector"><label>Periode: <strong>' + startDate + ' - ' + endDate + '</strong></label></div>';
     
-    // Shift Pagi
-    html += `
-        <div class="shift-section">
-            <div class="shift-title"><i class="fas fa-sun"></i> SHIFT PAGI (08:00 - 18:00)</div>
-            <table class="shift-table">
-                <thead>
-                    <tr>
-                        <th style="width: 35%">NAMA STAFF</th>
-                        <th style="width: 20%">CHECK-IN</th>
-                        <th style="width: 20%">CHECK-OUT</th>
-                        <th style="width: 15%">JOBDESK</th>
-                        <th style="width: 10%">JADWAL</th>
-                    </tr>
-                </thead>
-                <tbody>
-    `;
-    
-    const pagiStaff = ["REZA PRATAMA EFFENDY", "M IKHSAN", "STEVEN VITORIUS", "FEBRY TIA NATA", "WILLY VIJAY SIALLAGAN", "APIN"];
-    const pagiJobdesk = ["LINE UTAMA", "LINE BACK-UP", "LIVE CHAT", "LIVE CHAT", "LIVE CHAT", "LIVE CHAT"];
-    
+    // SHIFT PAGI
+    html += '<div class="shift-section"><div class="shift-title">SHIFT PAGI (08:00 - 18:00)</div><table class="shift-table"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead><tbody>';
+    const pagiStaff = ["REZA PRATAMA EFFENDY","M IKHSAN","STEVEN VITORIUS","FEBRY TIA NATA","WILLY VIJAY SIALLAGAN","APIN"];
+    const pagiJobdesk = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT","LIVE CHAT","LIVE CHAT"];
     for (let i = 0; i < pagiStaff.length; i++) {
-        html += `
-            <tr>
-                <td><select class="cs-staff-select">${staffData.cs.map(n => `<option value="${n}" ${n === pagiStaff[i] ? 'selected' : ''}>${n}</option>`).join('')}</select></td>
-                <td><input type="time" value="08:00:00" class="cs-time-in"></td>
-                <td><input type="time" value="18:00:00" class="cs-time-out"></td>
-                <td><select class="cs-jobdesk">${["LINE UTAMA", "LINE BACK-UP", "LIVE CHAT"].map(j => `<option value="${j}" ${j === pagiJobdesk[i] ? 'selected' : ''}>${j}</option>`).join('')}</select></td>
-                <td>PAGI</td>
-            </tr>
-        `;
+        html += '<tr>';
+        html += '<td><select class="cs-staff">' + staffData.cs.map(n => `<option value="${n}" ${n === pagiStaff[i] ? 'selected' : ''}>${n}</option>`).join('') + '</select></td>';
+        html += '<td><input type="time" value="08:00:00"></td>';
+        html += '<td><input type="time" value="18:00:00"></td>';
+        html += '<td><select>' + ["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j => `<option value="${j}" ${j === pagiJobdesk[i] ? 'selected' : ''}>${j}</option>`).join('') + '</select></td>';
+        html += '<td>PAGI</td>';
+        html += '</tr>';
     }
-    html += `</tbody></table></div>`;
+    html += '</tbody></table></div>';
     
-    // Shift Gantung
-    html += `
-        <div class="shift-section">
-            <div class="shift-title"><i class="fas fa-clock"></i> SHIFT GANTUNG (11:45 - 22:00)</div>
-            <table class="shift-table">
-                <thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead>
-                <tbody>
-                    <tr>
-                        <td><select class="cs-staff-select">${staffData.cs.map(n => `<option value="${n}" ${n === "ROHIT SHASIDAREN" ? 'selected' : ''}>${n}</option>`).join('')}</select></td>
-                        <td><input type="time" value="11:45:00"></td>
-                        <td><input type="time" value="22:00:00"></td>
-                        <td><select><option>LIVE CHAT</option></select></td>
-                        <td>GANTUNG</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    `;
+    // SHIFT GANTUNG
+    html += '<div class="shift-section"><div class="shift-title">SHIFT GANTUNG (11:45 - 22:00)</div><table class="shift-table"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead><tbody>';
+    html += '<tr>';
+    html += '<td><select class="cs-staff">' + staffData.cs.map(n => `<option value="${n}" ${n === "ROHIT SHASIDAREN" ? 'selected' : ''}>${n}</option>`).join('') + '</select></td>';
+    html += '<td><input type="time" value="11:45:00"></td>';
+    html += '<td><input type="time" value="22:00:00"></td>';
+    html += '<td><select><option>LIVE CHAT</option></select></td>';
+    html += '<td>GANTUNG</td>';
+    html += '</tr>';
+    html += '</tbody></table></div>';
     
-    // Shift Sore
-    html += `
-        <div class="shift-section">
-            <div class="shift-title"><i class="fas fa-moon"></i> SHIFT SORE (14:45 - 02:00)</div>
-            <table class="shift-table">
-                <thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead>
-                <tbody>
-    `;
-    
-    const soreStaff = ["DONANDA PRATAMA", "RAHUL RAO", "SABRINA PASKAH SAURMA MANIK", "JIWIKA", "DEDI SYAHPUTRI", "FAJAR RAMADHAN"];
-    const soreJobdesk = ["LINE UTAMA", "LINE BACK-UP", "LIVE CHAT", "LIVE CHAT", "LIVE CHAT", "LIVE CHAT"];
-    
+    // SHIFT SORE
+    html += '<div class="shift-section"><div class="shift-title">SHIFT SORE (14:45 - 02:00)</div><table class="shift-table"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead><tbody>';
+    const soreStaff = ["DONANDA PRATAMA","RAHUL RAO","SABRINA PASKAH SAURMA MANIK","JIWIKA","DEDI SYAHPUTRI","FAJAR RAMADHAN"];
+    const soreJobdesk = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT","LIVE CHAT","LIVE CHAT"];
     for (let i = 0; i < soreStaff.length; i++) {
-        html += `
-            <tr>
-                <td><select class="cs-staff-select">${staffData.cs.map(n => `<option value="${n}" ${n === soreStaff[i] ? 'selected' : ''}>${n}</option>`).join('')}</select></td>
-                <td><input type="time" value="14:45:00"></td>
-                <td><input type="time" value="02:00:00"></td>
-                <td><select>${["LINE UTAMA", "LINE BACK-UP", "LIVE CHAT"].map(j => `<option value="${j}" ${j === soreJobdesk[i] ? 'selected' : ''}>${j}</option>`).join('')}</select></td>
-                <td>SORE</td>
-            </tr>
-        `;
+        html += '<tr>';
+        html += '<td><select class="cs-staff">' + staffData.cs.map(n => `<option value="${n}" ${n === soreStaff[i] ? 'selected' : ''}>${n}</option>`).join('') + '</select></td>';
+        html += '<td><input type="time" value="14:45:00"></td>';
+        html += '<td><input type="time" value="02:00:00"></td>';
+        html += '<td><select>' + ["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j => `<option value="${j}" ${j === soreJobdesk[i] ? 'selected' : ''}>${j}</option>`).join('') + '</select></td>';
+        html += '<td>SORE</td>';
+        html += '</tr>';
     }
-    html += `</tbody></table></div>`;
+    html += '</tbody></table></div>';
     
-    // Shift Malam
-    html += `
-        <div class="shift-section">
-            <div class="shift-title"><i class="fas fa-star"></i> SHIFT MALAM (21:45 - 08:00)</div>
-            <table class="shift-table">
-                <thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead>
-                <tbody>
-    `;
-    
-    const malamStaff = ["LODI HERMANTO", "RIZKY MAULANA", "INDRA (C7014522) YONG", "APIN"];
-    const malamJobdesk = ["LINE UTAMA", "LINE BACK-UP", "LIVE CHAT", "LIVE CHAT"];
-    
+    // SHIFT MALAM
+    html += '<div class="shift-section"><div class="shift-title">SHIFT MALAM (21:45 - 08:00)</div><table class="shift-table"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead><tbody>';
+    const malamStaff = ["LODI HERMANTO","RIZKY MAULANA","INDRA (C7014522) YONG","APIN"];
+    const malamJobdesk = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT"];
     for (let i = 0; i < malamStaff.length; i++) {
-        html += `
-            <tr>
-                <td><select class="cs-staff-select">${staffData.cs.map(n => `<option value="${n}" ${n === malamStaff[i] ? 'selected' : ''}>${n}</option>`).join('')}</select></td>
-                <td><input type="time" value="21:45:00"></td>
-                <td><input type="time" value="08:00:00"></td>
-                <td><select>${["LINE UTAMA", "LINE BACK-UP", "LIVE CHAT"].map(j => `<option value="${j}" ${j === malamJobdesk[i] ? 'selected' : ''}>${j}</option>`).join('')}</select></td>
-                <td>MALAM</td>
-            </tr>
-        `;
+        html += '<tr>';
+        html += '<td><select class="cs-staff">' + staffData.cs.map(n => `<option value="${n}" ${n === malamStaff[i] ? 'selected' : ''}>${n}</option>`).join('') + '</select></td>';
+        html += '<td><input type="time" value="21:45:00"></td>';
+        html += '<td><input type="time" value="08:00:00"></td>';
+        html += '<td><select>' + ["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j => `<option value="${j}" ${j === malamJobdesk[i] ? 'selected' : ''}>${j}</option>`).join('') + '</select></td>';
+        html += '<td>MALAM</td>';
+        html += '</tr>';
     }
-    html += `</tbody></table></div>`;
+    html += '</tbody></table></div>';
     
     // SEDANG CUTI
-    html += `
-        <div class="shift-section">
-            <div class="shift-title"><i class="fas fa-umbrella-beach"></i> SEDANG CUTI</div>
-            <table class="shift-table">
-                <thead><tr><th>NAMA STAFF</th><th>KETERANGAN</th></tr></thead>
-                <tbody>
-    `;
+    html += '<div class="shift-section"><div class="shift-title">SEDANG CUTI</div><table class="shift-table"><thead><tr><th>NAMA STAFF</th><th>KETERANGAN</th></tr></thead><tbody>';
     for (let i = 0; i < 5; i++) {
-        html += `
-            <tr>
-                <td><select class="cs-cut-staff"><option value="">- Pilih Staff -</option>${staffData.cs.map(n => `<option value="${n}">${n}</option>`).join('')}</select></td>
-                <td><input type="text" placeholder="Alasan Cuti" class="cs-cut-reason"></td>
-            </tr>
-        `;
+        html += '<tr>';
+        html += '<td><select class="cs-cut-staff"><option value="">- Pilih Staff -</option>' + staffData.cs.map(n => `<option value="${n}">${n}</option>`).join('') + '</select></td>';
+        html += '<td><input type="text" placeholder="Alasan Cuti"></td>';
+        html += '</tr>';
     }
-    html += `</tbody></table></div>`;
+    html += '</tbody></table></div>';
     
     container.innerHTML = html;
+    console.log("renderShiftCS selesai, HTML length:", html.length);
 }
 
 // ==================== RENDER SHIFT KAPTEN ====================
 function renderShiftKapten() {
+    console.log("renderShiftKapten dipanggil");
     const container = document.getElementById('shiftKaptenContainer');
-    if (!container) return;
+    if (!container) {
+        console.log("Container shiftKaptenContainer tidak ditemukan");
+        return;
+    }
     
     const startDate = document.getElementById('kaptenStartDate').value;
     const endDate = document.getElementById('kaptenEndDate').value;
     
-    let html = `
-        <div class="date-selector" style="margin-bottom: 20px;">
-            <label>Periode: <strong style="color: var(--primary);">${startDate} - ${endDate}</strong></label>
-        </div>
-        <div class="shift-section">
-            <div class="shift-title"><i class="fas fa-user-tie"></i> SIFT KAPTEN</div>
-            <table class="shift-table">
-                <thead>
-                    <tr>
-                        <th style="width: 40%">NAMA STAFF</th>
-                        <th style="width: 25%">CHECK-IN</th>
-                        <th style="width: 25%">CHECK-OUT</th>
-                        <th style="width: 10%">JADWAL</th>
-                    </tr>
-                </thead>
-                <tbody>
-    `;
+    let html = '<div class="date-selector"><label>Periode: <strong>' + startDate + ' - ' + endDate + '</strong></label></div>';
+    html += '<div class="shift-section"><div class="shift-title">SIFT KAPTEN</div><table class="shift-table"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th></tr></thead><tbody>';
     
-    const kaptenShiftsList = [
+    const kaptenList = [
         { name: "EDOLI MANULLANG", checkIn: "08:00:00", checkOut: "18:00:00", jadwal: "PAGI" },
         { name: "AINI NADIAH", checkIn: "11:45:00", checkOut: "22:00:00", jadwal: "SIANG" },
         { name: "AGIL PRAYETNO", checkIn: "14:45:00", checkOut: "02:00:00", jadwal: "SORE 1" },
@@ -348,49 +283,37 @@ function renderShiftKapten() {
         { name: "JULIO YESAYAS NABABAN", checkIn: "08:00:00", checkOut: "18:00:00", jadwal: "PAGI" }
     ];
     
-    for (let i = 0; i < kaptenShiftsList.length; i++) {
-        const s = kaptenShiftsList[i];
-        html += `
-            <tr>
-                <td><select class="kapten-staff-select">${staffData.kapten.map(n => `<option value="${n}" ${n === s.name ? 'selected' : ''}>${n}</option>`).join('')}</select></td>
-                <td><input type="time" value="${s.checkIn}" class="kapten-time-in"></td>
-                <td><input type="time" value="${s.checkOut}" class="kapten-time-out"></td>
-                <td>${s.jadwal}</td>
-            </tr>
-        `;
+    for (let i = 0; i < kaptenList.length; i++) {
+        const s = kaptenList[i];
+        html += '<tr>';
+        html += '<td><select class="kapten-staff">' + staffData.kapten.map(n => `<option value="${n}" ${n === s.name ? 'selected' : ''}>${n}</option>`).join('') + '</select></td>';
+        html += '<td><input type="time" value="' + s.checkIn + '"></td>';
+        html += '<td><input type="time" value="' + s.checkOut + '"></td>';
+        html += '<td>' + s.jadwal + '</td>';
+        html += '</tr>';
     }
-    html += `</tbody></table></div>`;
+    html += '</tbody></table></div>';
     
     container.innerHTML = html;
+    console.log("renderShiftKapten selesai");
 }
 
 // ==================== RENDER SHIFT KASIR ====================
 function renderShiftKasir() {
+    console.log("renderShiftKasir dipanggil");
     const container = document.getElementById('shiftKasirContainer');
-    if (!container) return;
+    if (!container) {
+        console.log("Container shiftKasirContainer tidak ditemukan");
+        return;
+    }
     
     const startDate = document.getElementById('kasirStartDate').value;
     const endDate = document.getElementById('kasirEndDate').value;
     
-    let html = `
-        <div class="date-selector" style="margin-bottom: 20px;">
-            <label>Periode: <strong style="color: var(--primary);">${startDate} - ${endDate}</strong></label>
-        </div>
-        <div class="shift-section">
-            <div class="shift-title"><i class="fas fa-coins"></i> SIFT KASIR</div>
-            <table class="shift-table">
-                <thead>
-                    <tr>
-                        <th style="width: 40%">NAMA STAFF</th>
-                        <th style="width: 25%">CHECK-IN</th>
-                        <th style="width: 25%">CHECK-OUT</th>
-                        <th style="width: 10%">JADWAL</th>
-                    </tr>
-                </thead>
-                <tbody>
-    `;
+    let html = '<div class="date-selector"><label>Periode: <strong>' + startDate + ' - ' + endDate + '</strong></label></div>';
+    html += '<div class="shift-section"><div class="shift-title">SIFT KASIR</div><table class="shift-table"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th></tr></thead><tbody>';
     
-    const kasirShiftsList = [
+    const kasirList = [
         { name: "PAJAR WIRATAMA SARAGIH", checkIn: "07:45:00", checkOut: "18:00:00", jadwal: "Shift 1" },
         { name: "HERRY SYAPUTRA", checkIn: "09:45:00", checkOut: "20:00:00", jadwal: "Shift 2" },
         { name: "EFRANTA", checkIn: "11:45:00", checkOut: "22:00:00", jadwal: "Shift 3" },
@@ -403,23 +326,40 @@ function renderShiftKasir() {
         { name: "NATASYA NABILA", checkIn: "11:45:00", checkOut: "00:00:00", jadwal: "Shift 10" },
         { name: "MUHAMMAD NUR RASYDI", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 11" },
         { name: "MHD RANGGA PRADINATA", checkIn: "17:45:00", checkOut: "06:00:00", jadwal: "Shift 12" },
-        { name: "SONIYA", checkIn: "19:45:00", checkOut: "08:00:00", jadwal: "Shift 13" }
+        { name: "SONIYA", checkIn: "19:45:00", checkOut: "08:00:00", jadwal: "Shift 13" },
+        { name: "KRISTIN AUDIA SITUMORANG", checkIn: "07:45:00", checkOut: "18:00:00", jadwal: "Shift 14" },
+        { name: "ABELLIA AMANDA", checkIn: "09:45:00", checkOut: "20:00:00", jadwal: "Shift 15" },
+        { name: "PUTRI GUSVINA", checkIn: "11:45:00", checkOut: "22:00:00", jadwal: "Shift 16" },
+        { name: "ADAM DANY PUTRA", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 17" },
+        { name: "FRAYOGA HARIANJA", checkIn: "14:45:00", checkOut: "01:00:00", jadwal: "Shift 18" },
+        { name: "JENNY SAWITRI", checkIn: "17:45:00", checkOut: "04:00:00", jadwal: "Shift 19" },
+        { name: "DENNY ANDRIAN", checkIn: "21:45:00", checkOut: "08:00:00", jadwal: "Shift 20" },
+        { name: "YOGES SUARA", checkIn: "07:45:00", checkOut: "20:00:00", jadwal: "Shift 21" },
+        { name: "RIDUWAN EFENDI", checkIn: "09:45:00", checkOut: "22:00:00", jadwal: "Shift 22" },
+        { name: "MELITA", checkIn: "11:45:00", checkOut: "00:00:00", jadwal: "Shift 23" },
+        { name: "RYAN PERMANA", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 24" },
+        { name: "TENGKU FAREL DAVILA RUSLI", checkIn: "17:45:00", checkOut: "06:00:00", jadwal: "Shift 25" },
+        { name: "CIPTO", checkIn: "19:45:00", checkOut: "08:00:00", jadwal: "Shift 26" },
+        { name: "JOKO PURNOMO", checkIn: "07:45:00", checkOut: "18:00:00", jadwal: "Shift 27" },
+        { name: "KAU SALYA", checkIn: "09:45:00", checkOut: "20:00:00", jadwal: "Shift 28" },
+        { name: "SOPHEAP VISAL", checkIn: "11:45:00", checkOut: "22:00:00", jadwal: "Shift 29" },
+        { name: "LEA SREY MEY", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 30" },
+        { name: "CHEA AK RUN", checkIn: "14:45:00", checkOut: "01:00:00", jadwal: "Shift 31" }
     ];
     
-    for (let i = 0; i < kasirShiftsList.length; i++) {
-        const s = kasirShiftsList[i];
-        html += `
-            <tr>
-                <td><select class="kasir-staff-select">${staffData.kasir.map(n => `<option value="${n}" ${n === s.name ? 'selected' : ''}>${n}</option>`).join('')}</select></td>
-                <td><input type="time" value="${s.checkIn}" class="kasir-time-in"></td>
-                <td><input type="time" value="${s.checkOut}" class="kasir-time-out"></td>
-                <td>${s.jadwal}</td>
-            </tr>
-        `;
+    for (let i = 0; i < kasirList.length; i++) {
+        const s = kasirList[i];
+        html += '<tr>';
+        html += '<td><select class="kasir-staff">' + staffData.kasir.map(n => `<option value="${n}" ${n === s.name ? 'selected' : ''}>${n}</option>`).join('') + '</select></td>';
+        html += '<td><input type="time" value="' + s.checkIn + '"></td>';
+        html += '<td><input type="time" value="' + s.checkOut + '"></td>';
+        html += '<td>' + s.jadwal + '</td>';
+        html += '</tr>';
     }
-    html += `</tbody></table></div>`;
+    html += '</tbody></table></div>';
     
     container.innerHTML = html;
+    console.log("renderShiftKasir selesai");
 }
 
         function markFinePaid(n){if(fineData[n]&&!fineData[n].paid){Swal.fire({title:'Konfirmasi',text:`Denda ${fineData[n].amount} Bath untuk ${n} sudah dibayar?`,icon:'question',showCancelButton:!0,confirmButtonText:'Ya, Sudah Dibayar'}).then(r=>{if(r.isConfirmed){fineData[n].paid=!0;saveData();renderAttendanceTable();renderAbsentTable();renderDashboard();Swal.fire('Sukses!','Denda telah dibayar','success');}});}}
