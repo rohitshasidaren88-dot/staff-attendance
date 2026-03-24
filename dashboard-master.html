@@ -76,12 +76,12 @@
         .action-btn { padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer; background: #c4a962; color: white; }
         
         /* Shift Tables */
-        .shift-section { margin-bottom: 30px; background: white; border-radius: 16px; overflow: hidden; border: 1px solid #e0d4c4; }
-        .shift-title { background: linear-gradient(135deg, #c4a962, #b38f40); color: white; padding: 12px 20px; font-weight: 600; }
-        .shift-table { width: 100%; border-collapse: collapse; }
-        .shift-table th { background: #f5f0e8; padding: 12px; text-align: center; border-bottom: 2px solid #c4a962; }
-        .shift-table td { padding: 10px; text-align: center; border-bottom: 1px solid #e0d4c4; }
-        .shift-table select, .shift-table input { width: 95%; padding: 8px; border: 1px solid #e0d4c4; border-radius: 8px; }
+        .shiftsection { margin-bottom: 30px; background: white; border-radius: 16px; overflow: hidden; border: 1px solid #e0d4c4; }
+        .shifttitle { background: linear-gradient(135deg, #c4a962, #b38f40); color: white; padding: 12px 20px; font-weight: 600; }
+        .shifttable { width: 100%; border-collapse: collapse; }
+        .shifttable th { background: #f5f0e8; padding: 12px; text-align: center; border-bottom: 2px solid #c4a962; }
+        .shifttable td { padding: 10px; text-align: center; border-bottom: 1px solid #e0d4c4; }
+        .shifttable select, .shifttable input { width: 95%; padding: 8px; border: 1px solid #e0d4c4; border-radius: 8px; }
         .date-selector { background: white; padding: 15px; border-radius: 16px; margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; border: 1px solid #e0d4c4; }
         .btn-submit { background: #c4a962; color: white; padding: 8px 20px; border: none; border-radius: 30px; cursor: pointer; }
         
@@ -107,9 +107,9 @@
             <div class="sidebar-menu">
                 <div class="menu-item active" data-page="dashboard"><i class="fas fa-chart-pie"></i><span>Dashboard</span></div>
                 <div class="menu-item" data-page="attendance"><i class="fas fa-calendar-check"></i><span>Jadwal Absen Staff</span></div>
-                <div class="menu-item" data-page="shift-cs"><i class="fas fa-users"></i><span>SIFT CS</span></div>
-                <div class="menu-item" data-page="shift-kapten"><i class="fas fa-user-tie"></i><span>SIFT KAPTEN</span></div>
-                <div class="menu-item" data-page="shift-kasir"><i class="fas fa-coins"></i><span>SIFT KASIR</span></div>
+                <div class="menu-item" data-page="shiftcs"><i class="fas fa-users"></i><span>SIFT CS</span></div>
+                <div class="menu-item" data-page="shiftkapten"><i class="fas fa-user-tie"></i><span>SIFT KAPTEN</span></div>
+                <div class="menu-item" data-page="shiftkasir"><i class="fas fa-coins"></i><span>SIFT KASIR</span></div>
                 <div class="menu-item" data-page="absent"><i class="fas fa-exclamation-triangle"></i><span>Data Staff Tidak Absen</span></div>
             </div>
             <div class="sidebar-footer"><div class="menu-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span>Logout</span></div></div>
@@ -139,7 +139,7 @@
                 </div>
             </div>
             
-            <div id="shiftCsPage" style="display: none;">
+            <div id="shiftcsPage" style="display: none;">
                 <div class="card">
                     <h3 class="card-title"><i class="fas fa-users"></i> Jadwal SIFT CS</h3>
                     <div class="date-selector">
@@ -151,7 +151,7 @@
                 </div>
             </div>
             
-            <div id="shiftKaptenPage" style="display: none;">
+            <div id="shiftkaptenPage" style="display: none;">
                 <div class="card">
                     <h3 class="card-title"><i class="fas fa-user-tie"></i> Jadwal SIFT KAPTEN</h3>
                     <div class="date-selector">
@@ -163,7 +163,7 @@
                 </div>
             </div>
             
-            <div id="shiftKasirPage" style="display: none;">
+            <div id="shiftkasirPage" style="display: none;">
                 <div class="card">
                     <h3 class="card-title"><i class="fas fa-coins"></i> Jadwal SIFT KASIR</h3>
                     <div class="date-selector">
@@ -368,8 +368,8 @@ function renderShiftCS() {
     let html = `<div class="date-selector"><label>Periode: <strong>${startDate} - ${endDate}</strong></label></div>`;
     
     // ==================== SHIFT PAGI ====================
-    html += `<div class="shift-section"><div class="shift-title">SHIFT PAGI (08:00 - 18:00)</div>`;
-    html += `<table class="shift-table"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead><tbody>`;
+    html += `<div class="shiftsection"><div class="shifttitle">SHIFT PAGI (08:00 - 18:00)</div>`;
+    html += `<table class="shifttable"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead><tbody>`;
     
     const pagiStaff = [
         "REZA PRATAMA EFFENDY", "M IKHSAN", "STEVEN VITORIUS", 
@@ -389,8 +389,8 @@ function renderShiftCS() {
     html += `</tbody></table></div>`;
     
     // ==================== SHIFT GANTUNG ====================
-    html += `<div class="shift-section"><div class="shift-title">SHIFT GANTUNG (11:45 - 22:00)</div>`;
-    html += `<table class="shift-table"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead><tbody>`;
+    html += `<div class="shiftsection"><div class="shifttitle">SHIFT GANTUNG (11:45 - 22:00)</div>`;
+    html += `<table class="shifttable"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead><tbody>`;
     html += `<tr>`;
     html += `<td><select class="cs-staff">${staffData.cs.map(n => `<option value="${n}" ${n === "ROHIT SHASIDAREN" ? 'selected' : ''}>${n}</option>`).join('')}</select></td>`;
     html += `<td><input type="time" value="11:45:00"></td>`;
@@ -401,8 +401,8 @@ function renderShiftCS() {
     html += `</tbody></table></div>`;
     
     // ==================== SHIFT SORE ====================
-    html += `<div class="shift-section"><div class="shift-title">SHIFT SORE (14:45 - 02:00)</div>`;
-    html += `<table class="shift-table"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead><tbody>`;
+    html += `<div class="shiftsection"><div class="shifttitle">SHIFT SORE (14:45 - 02:00)</div>`;
+    html += `<table class="shifttable"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead><tbody>`;
     
     const soreStaff = [
         "DONANDA PRATAMA", "RAHUL RAO", "SABRINA PASKAH SAURMA MANIK",
@@ -422,8 +422,8 @@ function renderShiftCS() {
     html += `</tbody></table></div>`;
     
     // ==================== SHIFT MALAM ====================
-    html += `<div class="shift-section"><div class="shift-title">SHIFT MALAM (21:45 - 08:00)</div>`;
-    html += `<table class="shift-table"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead><tbody>`;
+    html += `<div class="shiftsection"><div class="shifttitle">SHIFT MALAM (21:45 - 08:00)</div>`;
+    html += `<table class="shifttable"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead><tbody>`;
     
     const malamStaff = ["LODI HERMANTO", "RIZKY MAULANA", "INDRA (C7014522) YONG", "APIN"];
     const malamJobdesk = ["LINE UTAMA", "LINE BACK-UP", "LIVE CHAT", "LIVE CHAT"];
@@ -440,8 +440,8 @@ function renderShiftCS() {
     html += `</tbody></table></div>`;
     
     // ==================== SEDANG CUTI ====================
-    html += `<div class="shift-section"><div class="shift-title">SEDANG CUTI</div>`;
-    html += `<table class="shift-table"><thead><tr><th>NAMA STAFF</th><th>KETERANGAN</th></tr></thead><tbody>`;
+    html += `<div class="shiftsection"><div class="shifttitle">SEDANG CUTI</div>`;
+    html += `<table class="shifttable"><thead><tr><th>NAMA STAFF</th><th>KETERANGAN</th></tr></thead><tbody>`;
     for (let i = 0; i < 5; i++) {
         html += `<tr>`;
         html += `<td><select class="cs-cut-staff"><option value="">- Pilih Staff -</option>${staffData.cs.map(n => `<option value="${n}">${n}</option>`).join('')}</select></td>`;
@@ -460,7 +460,7 @@ function renderShiftCS() {
             const startDate = document.getElementById('kaptenStartDate').value;
             const endDate = document.getElementById('kaptenEndDate').value;
             let html = '<div class="date-selector"><label>Periode: <strong>' + startDate + ' - ' + endDate + '</strong></label></div>';
-            html += '<div class="shift-section"><div class="shift-title">SIFT KAPTEN</div><table class="shift-table"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th></tr></thead><tbody>';
+            html += '<div class="shiftsection"><div class="shifttitle">SIFT KAPTEN</div><table class="shifttable"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th></tr></thead><tbody>';
             const kaptenList = [
                 { name: "EDOLI MANULLANG", checkIn: "08:00:00", checkOut: "18:00:00", jadwal: "PAGI" },
                 { name: "AINI NADIAH", checkIn: "11:45:00", checkOut: "22:00:00", jadwal: "SIANG" },
@@ -486,7 +486,7 @@ function renderShiftCS() {
             const startDate = document.getElementById('kasirStartDate').value;
             const endDate = document.getElementById('kasirEndDate').value;
             let html = '<div class="date-selector"><label>Periode: <strong>' + startDate + ' - ' + endDate + '</strong></label></div>';
-            html += '<div class="shift-section"><div class="shift-title">SIFT KASIR</div><table class="shift-table"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th></tr></thead><tbody>';
+            html += '<div class="shiftsection"><div class="shifttitle">SIFT KASIR</div><table class="shifttable"><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th></tr></thead><tbody>';
             const kasirList = [
                 { name: "PAJAR WIRATAMA SARAGIH", checkIn: "07:45:00", checkOut: "18:00:00", jadwal: "Shift 1" },
                 { name: "HERRY SYAPUTRA", checkIn: "09:45:00", checkOut: "20:00:00", jadwal: "Shift 2" },
@@ -553,24 +553,26 @@ function renderShiftCS() {
             }
         }
 
-        function switchPage(p){
+function switchPage(p) {
     console.log("switchPage dipanggil dengan page:", p);
-            const pages = ['dashboard', 'attendance', 'shiftCs', 'shiftKapten', 'shiftKasir', 'absent'];
-            for (let i = 0; i < pages.length; i++) {
-                const el = document.getElementById(pages[i] + 'Page');
-                if (el) el.style.display = (pages[i] === pageId) ? 'block' : 'none';
-            }
-            const titles = { dashboard: 'Dashboard', attendance: 'Jadwal Absen Staff', shiftCs: 'SIFT CS', shiftKapten: 'SIFT KAPTEN', shiftKasir: 'SIFT KASIR', absent: 'Data Staff Tidak Absen' };
-            document.getElementById('pageTitle').innerHTML = titles[pageId] || 'Dashboard';
-            if (pageId === 'dashboard') renderDashboard();
-            if (pageId === 'attendance') renderAttendanceTable();
-            if (pageId === 'shiftCs') renderShiftCS();
-            if (pageId === 'shiftKapten') renderShiftKapten();
-            if (pageId === 'shiftKasir') renderShiftKasir();
-            if (pageId === 'absent') renderAbsentTable();
+    const pages = ['dashboard', 'attendance', 'shiftcs', 'shiftkapten', 'shiftkasir', 'absent'];
+    for (let i = 0; i < pages.length; i++) {
+        const el = document.getElementById(pages[i] + 'Page');
+        if (el) {
+            el.style.display = (pages[i] === p) ? 'block' : 'none';
+            console.log(pages[i] + 'Page display:', el.style.display);
         }
+    }
+    // ... sisanya sama
+    if (p === 'dashboard') renderDashboard();
+    if (p === 'attendance') renderAttendanceTable();
+    if (p === 'shiftcs') renderShiftCS();
+    if (p === 'shiftkapten') renderShiftKapten();
+    if (p === 'shiftkasir') renderShiftKasir();
+    if (p === 'absent') renderAbsentTable();
+}
 
-        function initTheme() {
+     function initTheme() {
             if (localStorage.getItem('theme') === 'dark') {
                 document.body.classList.add('dark');
                 const btns = document.querySelectorAll('#themeToggle, #themeToggleFloat');
