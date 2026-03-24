@@ -46,11 +46,18 @@
             </div>
             
             <div id="shiftKaptenPage" class="page-content" style="display: none;">
-                <div class="card"><h3 class="card-title"><i class="fas fa-user-tie"></i> Jadwal SIFT KAPTEN</h3>
-                    <div class="date-selector"><label>Periode: </label><input type="date" id="kaptenStartDate" value="2026-03-20"><span> - </span><input type="date" id="kaptenEndDate" value="2026-04-02"><button class="btn-submit" id="updateKaptenSchedule">Update</button></div>
-                    <div id="shiftKaptenContainer"></div>
-                </div>
-            </div>
+    <div class="card">
+        <h3 class="card-title"><i class="fas fa-user-tie"></i> Jadwal SIFT KAPTEN</h3>
+        <div class="date-selector">
+            <label>Periode: </label>
+            <input type="date" id="kaptenStartDate" value="2026-03-20">
+            <span> - </span>
+            <input type="date" id="kaptenEndDate" value="2026-04-02">
+            <button class="btn-submit" id="updateKaptenSchedule">Update</button>
+        </div>
+        <div id="shiftKaptenContainer"></div>
+    </div>
+</div>
             
             <div id="shiftKasirPage" class="page-content" style="display: none;">
                 <div class="card"><h3 class="card-title"><i class="fas fa-coins"></i> Jadwal SIFT KASIR</h3>
@@ -63,287 +70,169 @@
     <div class="theme-toggle" id="themeToggleFloat"><i class="fas fa-moon"></i></div>
 
     <script>
-        // ==================== DATA STAFF ====================
         const staffData = {
             kapten: ["EDOLI MANULLANG","AINI NADIAH","AGIL PRAYETNO","AGUS SUDIANTO","ROBY SUGARA","JULIO YESAYAS NABABAN"],
             kasir: ["PAJAR WIRATAMA SARAGIH","HERRY SYAPUTRA","EFRANTA","ADRIAN PATRIC PRESLY SIMARMATA","SYOFIAH","GRACE ANGGAWAN HUTABARAT","DIXIELIA","KELVIN ADRIAN HRP","MUHAMMAD KHAIRIL","NATASYA NABILA","MUHAMMAD NUR RASYDI","MHD RANGGA PRADINATA","SONIYA","KRISTIN AUDIA SITUMORANG","ABELLIA AMANDA","PUTRI GUSVINA","ADAM DANY PUTRA","FRAYOGA HARIANJA","JENNY SAWITRI","DENNY ANDRIAN","YOGES SUARA","RIDUWAN EFENDI","MELITA","RYAN PERMANA","TENGKU FAREL DAVILA RUSLI","CIPTO","JOKO PURNOMO","KAU SALYA","SOPHEAP VISAL","LEA SREY MEY","CHEA AK RUN"]
         };
 
-        // Shift Kapten
         const kaptenShifts = [
-            { name: "Shift Pagi", checkIn: "08:00:00", checkOut: "18:00:00" },
-            { name: "Shift Siang", checkIn: "11:45:00", checkOut: "22:00:00" },
-            { name: "Shift Sore 1", checkIn: "14:45:00", checkOut: "02:00:00" },
-            { name: "Shift Sore 2", checkIn: "15:45:00", checkOut: "02:00:00" },
+            { name: "Shift Pagi", checkIn: "08:00:00", checkOut: "18:00:00" }, { name: "Shift Siang", checkIn: "11:45:00", checkOut: "22:00:00" },
+            { name: "Shift Sore 1", checkIn: "14:45:00", checkOut: "02:00:00" }, { name: "Shift Sore 2", checkIn: "15:45:00", checkOut: "02:00:00" },
             { name: "Shift Malam", checkIn: "21:45:00", checkOut: "08:00:00" }
         ];
 
-        // Shift Kasir (13 shift)
         const kasirShifts = [
-            { checkIn: "07:45:00", checkOut: "18:00:00" }, { checkIn: "09:45:00", checkOut: "20:00:00" },
-            { checkIn: "11:45:00", checkOut: "22:00:00" }, { checkIn: "12:45:00", checkOut: "01:00:00" },
-            { checkIn: "14:45:00", checkOut: "01:00:00" }, { checkIn: "17:45:00", checkOut: "04:00:00" },
-            { checkIn: "21:45:00", checkOut: "08:00:00" }, { checkIn: "07:45:00", checkOut: "20:00:00" },
-            { checkIn: "09:45:00", checkOut: "22:00:00" }, { checkIn: "11:45:00", checkOut: "00:00:00" },
-            { checkIn: "12:45:00", checkOut: "01:00:00" }, { checkIn: "17:45:00", checkOut: "06:00:00" },
+            { checkIn: "07:45:00", checkOut: "18:00:00" }, { checkIn: "09:45:00", checkOut: "20:00:00" }, { checkIn: "11:45:00", checkOut: "22:00:00" },
+            { checkIn: "12:45:00", checkOut: "01:00:00" }, { checkIn: "14:45:00", checkOut: "01:00:00" }, { checkIn: "17:45:00", checkOut: "04:00:00" },
+            { checkIn: "21:45:00", checkOut: "08:00:00" }, { checkIn: "07:45:00", checkOut: "20:00:00" }, { checkIn: "09:45:00", checkOut: "22:00:00" },
+            { checkIn: "11:45:00", checkOut: "00:00:00" }, { checkIn: "12:45:00", checkOut: "01:00:00" }, { checkIn: "17:45:00", checkOut: "06:00:00" },
             { checkIn: "19:45:00", checkOut: "08:00:00" }
         ];
 
-        let attendanceData = {};
-        let fineData = {};
-        let currentUser = null;
-
-        // ==================== FUNGSI DASAR ====================
-        function saveData() {
-            localStorage.setItem('attendance_data', JSON.stringify(attendanceData));
-            localStorage.setItem('fine_data', JSON.stringify(fineData));
-        }
+        let attendanceData = {}, fineData = {}, currentUser = null;
 
         function initData() {
             const stored = localStorage.getItem('attendance_data');
-            if (stored) {
-                attendanceData = JSON.parse(stored);
-            } else {
-                const allStaff = [...staffData.kapten, ...staffData.kasir];
-                for (let i = 0; i < allStaff.length; i++) {
-                    attendanceData[allStaff[i]] = { status: 'belum', checkInTime: null, shift: null };
-                }
-                saveData();
-            }
-            
+            if(stored) attendanceData = JSON.parse(stored);
+            else [...staffData.kapten,...staffData.kasir].forEach(n=>attendanceData[n]={status:'belum',checkInTime:null,shift:null});
             const storedFine = localStorage.getItem('fine_data');
-            if (storedFine) {
-                fineData = JSON.parse(storedFine);
-            } else {
-                const allStaff = [...staffData.kapten, ...staffData.kasir];
-                for (let i = 0; i < allStaff.length; i++) {
-                    fineData[allStaff[i]] = { amount: 0, paid: false };
-                }
-                saveData();
-            }
+            if(storedFine) fineData = JSON.parse(storedFine);
+            else [...staffData.kapten,...staffData.kasir].forEach(n=>fineData[n]={amount:0,paid:false});
+            saveData();
         }
+        function saveData(){localStorage.setItem('attendance_data',JSON.stringify(attendanceData));localStorage.setItem('fine_data',JSON.stringify(fineData));}
+        function checkSession(){const u=JSON.parse(sessionStorage.getItem('currentUser'));if(!u||u.role!=='kapten'){window.location.href='index.html';return;}currentUser=u;document.getElementById('userAvatar').innerHTML=u.fullname.charAt(0).toUpperCase();document.getElementById('userName').innerHTML=u.fullname;document.getElementById('userRole').innerHTML=u.role.toUpperCase();}
 
-        function checkSession() {
-            const user = JSON.parse(sessionStorage.getItem('currentUser'));
-            if (!user || user.role !== 'kapten') {
-                window.location.href = 'index.html';
-                return;
-            }
-            currentUser = user;
-            document.getElementById('userAvatar').innerHTML = user.fullname.charAt(0).toUpperCase();
-            document.getElementById('userName').innerHTML = user.fullname;
-            document.getElementById('userRole').innerHTML = user.role.toUpperCase();
-        }
+        function renderAttendanceTable(){const t=document.getElementById('attendanceTableBody');if(!t)return;t.innerHTML='';[...staffData.kapten,...staffData.kasir].forEach(n=>{const a=attendanceData[n]||{status:'belum',checkInTime:null,shift:null},f=fineData[n]||{amount:0,paid:!1};t.innerHTML+=`<tr><td>${n}</td><td><span class="badge ${a.status==='sudah'?'badge-success':'badge-danger'}">${a.status==='sudah'?'SUDAH ABSEN':'BELUM ABSEN'}</span></td><td>${a.checkInTime||'-'}</td><td>${a.shift||'-'}</td><td><span class="fine-status ${f.paid?'fine-paid':'fine-unpaid'}" onclick="markFinePaid('${n}')">${f.paid?'DONE':`${f.amount} Bath`}</span></td></tr>`;});}
 
-        // ==================== RENDER TABEL ====================
-        function renderAttendanceTable() {
-            const tbody = document.getElementById('attendanceTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            const allStaff = [...staffData.kapten, ...staffData.kasir];
-            for (let i = 0; i < allStaff.length; i++) {
-                const name = allStaff[i];
-                const att = attendanceData[name] || { status: 'belum', checkInTime: null, shift: null };
-                const fine = fineData[name] || { amount: 0, paid: false };
-                const statusClass = (att.status === 'sudah') ? 'badge-success' : 'badge-danger';
-                const statusText = (att.status === 'sudah') ? 'SUDAH ABSEN' : 'BELUM ABSEN';
-                const fineClass = fine.paid ? 'fine-paid' : 'fine-unpaid';
-                const fineText = fine.paid ? 'DONE' : fine.amount + ' Bath';
-                tbody.innerHTML += ' ox<td>' + name + '</td><td><span class="badge ' + statusClass + '">' + statusText + '</span></td><td>' + (att.checkInTime || '-') + '</td><td>' + (att.shift || '-') + '</td><td><span class="fine-status ' + fineClass + '" onclick="markFinePaid(\'' + name + '\')">' + fineText + '</span></td> 试图';
-            }
-        }
+        // ==================== RENDER SHIFT KAPTEN ====================
+function renderShiftKapten() {
+    const container = document.getElementById('shiftKaptenContainer');
+    if (!container) return;
+    
+    const startDate = document.getElementById('kaptenStartDate').value;
+    const endDate = document.getElementById('kaptenEndDate').value;
+    
+    let html = `
+        <div class="date-selector" style="margin-bottom: 20px;">
+            <label>Periode: <strong style="color: var(--primary);">${startDate} - ${endDate}</strong></label>
+        </div>
+        <div class="shift-section">
+            <div class="shift-title"><i class="fas fa-user-tie"></i> SIFT KAPTEN</div>
+            <table class="shift-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40%">NAMA STAFF</th>
+                        <th style="width: 25%">CHECK-IN</th>
+                        <th style="width: 25%">CHECK-OUT</th>
+                        <th style="width: 10%">JADWAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+    
+    const kaptenShiftsList = [
+        { name: "EDOLI MANULLANG", checkIn: "08:00:00", checkOut: "18:00:00", jadwal: "PAGI" },
+        { name: "AINI NADIAH", checkIn: "11:45:00", checkOut: "22:00:00", jadwal: "SIANG" },
+        { name: "AGIL PRAYETNO", checkIn: "14:45:00", checkOut: "02:00:00", jadwal: "SORE 1" },
+        { name: "AGUS SUDIANTO", checkIn: "15:45:00", checkOut: "02:00:00", jadwal: "SORE 2" },
+        { name: "ROBY SUGARA", checkIn: "21:45:00", checkOut: "08:00:00", jadwal: "MALAM" },
+        { name: "JULIO YESAYAS NABABAN", checkIn: "08:00:00", checkOut: "18:00:00", jadwal: "PAGI" }
+    ];
+    
+    for (let i = 0; i < kaptenShiftsList.length; i++) {
+        const s = kaptenShiftsList[i];
+        html += `
+            <tr>
+                <td><select class="kapten-staff-select">${staffData.kapten.map(n => `<option value="${n}" ${n === s.name ? 'selected' : ''}>${n}</option>`).join('')}</select></td>
+                <td><input type="time" value="${s.checkIn}" class="kapten-time-in"></td>
+                <td><input type="time" value="${s.checkOut}" class="kapten-time-out"></td>
+                <td>${s.jadwal}</td>
+            </tr>
+        `;
+    }
+    html += `</tbody></table></div>`;
+    
+    container.innerHTML = html;
+}
 
-        // ==================== RENDER SHIFT ====================
-        function renderShiftKapten() {
-            const container = document.getElementById('shiftKaptenContainer');
-            if (!container) return;
-            const startDate = document.getElementById('kaptenStartDate').value;
-            const endDate = document.getElementById('kaptenEndDate').value;
-            let html = '<div class="date-selector"><label>Periode: <strong>' + startDate + ' - ' + endDate + '</strong></label></div>';
-            
-            for (let si = 0; si < kaptenShifts.length; si++) {
-                const s = kaptenShifts[si];
-                const defaultStaff = staffData.kapten[si % staffData.kapten.length];
-                html += '<div class="shift-section"><div class="shift-title">' + s.name + ' (' + s.checkIn + ' - ' + s.checkOut + ')</div>';
-                html += '<table class="shift-table"><thead>  ox<th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th> </thead><tbody>';
-                html += ' ox<td><select class="kapten-staff">';
-                for (let j = 0; j < staffData.kapten.length; j++) {
-                    const selected = (staffData.kapten[j] === defaultStaff) ? 'selected' : '';
-                    html += '<option value="' + staffData.kapten[j] + '" ' + selected + '>' + staffData.kapten[j] + '</option>';
-                }
-                html += '</select></td>';
-                html += '<td><input type="time" value="' + s.checkIn + '"></td>';
-                html += '<td><input type="time" value="' + s.checkOut + '"></td>';
-                html += '<td>' + s.name + '</td> 试图';
-                html += '</tbody>}</div>';
-            }
-            container.innerHTML = html;
-        }
+// ==================== RENDER SHIFT KASIR ====================
+function renderShiftKasir() {
+    const container = document.getElementById('shiftKasirContainer');
+    if (!container) return;
+    
+    const startDate = document.getElementById('kasirStartDate').value;
+    const endDate = document.getElementById('kasirEndDate').value;
+    
+    let html = `
+        <div class="date-selector" style="margin-bottom: 20px;">
+            <label>Periode: <strong style="color: var(--primary);">${startDate} - ${endDate}</strong></label>
+        </div>
+        <div class="shift-section">
+            <div class="shift-title"><i class="fas fa-coins"></i> SIFT KASIR</div>
+            <table class="shift-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40%">NAMA STAFF</th>
+                        <th style="width: 25%">CHECK-IN</th>
+                        <th style="width: 25%">CHECK-OUT</th>
+                        <th style="width: 10%">JADWAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+    
+    const kasirShiftsList = [
+        { name: "PAJAR WIRATAMA SARAGIH", checkIn: "07:45:00", checkOut: "18:00:00", jadwal: "Shift 1" },
+        { name: "HERRY SYAPUTRA", checkIn: "09:45:00", checkOut: "20:00:00", jadwal: "Shift 2" },
+        { name: "EFRANTA", checkIn: "11:45:00", checkOut: "22:00:00", jadwal: "Shift 3" },
+        { name: "ADRIAN PATRIC PRESLY SIMARMATA", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 4" },
+        { name: "SYOFIAH", checkIn: "14:45:00", checkOut: "01:00:00", jadwal: "Shift 5" },
+        { name: "GRACE ANGGAWAN HUTABARAT", checkIn: "17:45:00", checkOut: "04:00:00", jadwal: "Shift 6" },
+        { name: "DIXIELIA", checkIn: "21:45:00", checkOut: "08:00:00", jadwal: "Shift 7" },
+        { name: "KELVIN ADRIAN HRP", checkIn: "07:45:00", checkOut: "20:00:00", jadwal: "Shift 8" },
+        { name: "MUHAMMAD KHAIRIL", checkIn: "09:45:00", checkOut: "22:00:00", jadwal: "Shift 9" },
+        { name: "NATASYA NABILA", checkIn: "11:45:00", checkOut: "00:00:00", jadwal: "Shift 10" },
+        { name: "MUHAMMAD NUR RASYDI", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 11" },
+        { name: "MHD RANGGA PRADINATA", checkIn: "17:45:00", checkOut: "06:00:00", jadwal: "Shift 12" },
+        { name: "SONIYA", checkIn: "19:45:00", checkOut: "08:00:00", jadwal: "Shift 13" }
+    ];
+    
+    for (let i = 0; i < kasirShiftsList.length; i++) {
+        const s = kasirShiftsList[i];
+        html += `
+            <tr>
+                <td><select class="kasir-staff-select">${staffData.kasir.map(n => `<option value="${n}" ${n === s.name ? 'selected' : ''}>${n}</option>`).join('')}</select></td>
+                <td><input type="time" value="${s.checkIn}" class="kasir-time-in"></td>
+                <td><input type="time" value="${s.checkOut}" class="kasir-time-out"></td>
+                <td>${s.jadwal}</td>
+            </tr>
+        `;
+    }
+    html += `</tbody></table></div>`;
+    
+    container.innerHTML = html;
+}
 
-        function renderShiftKasir() {
-            const container = document.getElementById('shiftKasirContainer');
-            if (!container) return;
-            const startDate = document.getElementById('kasirStartDate').value;
-            const endDate = document.getElementById('kasirEndDate').value;
-            let html = '<div class="date-selector"><label>Periode: <strong>' + startDate + ' - ' + endDate + '</strong></label></div>';
-            html += '<div class="shift-section"><table class="shift-table"><thead>  ox<th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th> </thead><tbody>';
-            
-            for (let i = 0; i < kasirShifts.length; i++) {
-                const s = kasirShifts[i];
-                const defaultStaff = staffData.kasir[i % staffData.kasir.length];
-                html += ' ox<td><select class="kasir-staff">';
-                for (let j = 0; j < staffData.kasir.length; j++) {
-                    const selected = (staffData.kasir[j] === defaultStaff) ? 'selected' : '';
-                    html += '<option value="' + staffData.kasir[j] + '" ' + selected + '>' + staffData.kasir[j] + '</option>';
-                }
-                html += '</select></td>';
-                html += '<td><input type="time" value="' + s.checkIn + '"></td>';
-                html += '<td><input type="time" value="' + s.checkOut + '"></td>';
-                html += '<td>Shift ' + (i + 1) + '</td> 试图';
-            }
-            html += '</tbody>}</div>';
-            container.innerHTML = html;
-        }
+        function markFinePaid(n){if(fineData[n]&&!fineData[n].paid){Swal.fire({title:'Konfirmasi',text:`Denda ${fineData[n].amount} Bath untuk ${n} sudah dibayar?`,icon:'question',showCancelButton:!0,confirmButtonText:'Ya, Sudah Dibayar'}).then(r=>{if(r.isConfirmed){fineData[n].paid=!0;saveData();renderAttendanceTable();Swal.fire('Sukses!','Denda telah dibayar','success');}});}}
 
-        function markFinePaid(name) {
-            if (fineData[name] && !fineData[name].paid) {
-                Swal.fire({
-                    title: 'Konfirmasi',
-                    text: 'Denda ' + fineData[name].amount + ' Bath untuk ' + name + ' sudah dibayar?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya, Sudah Dibayar'
-                }).then(function(result) {
-                    if (result.isConfirmed) {
-                        fineData[name].paid = true;
-                        saveData();
-                        renderAttendanceTable();
-                        Swal.fire('Sukses!', 'Denda telah dibayar', 'success');
-                    }
-                });
-            }
-        }
+        function switchPage(p){['attendance','shiftKapten','shiftKasir'].forEach(i=>{const e=document.getElementById(`${i}Page`);if(e)e.style.display=i===p?'block':'none';});const titles={attendance:'Jadwal Absen Staff',shiftKapten:'SIFT KAPTEN',shiftKasir:'SIFT KASIR'};document.getElementById('pageTitle').innerHTML=titles[p]||'Jadwal Absen Staff';if(p==='attendance')renderAttendanceTable();if(p==='shiftKapten')renderShiftKapten();if(p==='shiftKasir')renderShiftKasir();}
 
-        function switchPage(pageId) {
-            const pages = ['attendance', 'shiftKapten', 'shiftKasir'];
-            for (let i = 0; i < pages.length; i++) {
-                const p = pages[i];
-                const el = document.getElementById(p + 'Page');
-                if (el) el.style.display = (p === pageId) ? 'block' : 'none';
-            }
-            const titles = {
-                attendance: 'Jadwal Absen Staff',
-                shiftKapten: 'SIFT KAPTEN',
-                shiftKasir: 'SIFT KASIR'
-            };
-            document.getElementById('pageTitle').innerHTML = titles[pageId] || 'Jadwal Absen Staff';
-            if (pageId === 'attendance') renderAttendanceTable();
-            if (pageId === 'shiftKapten') renderShiftKapten();
-            if (pageId === 'shiftKasir') renderShiftKasir();
-        }
+        function initTheme(){if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark');document.querySelectorAll('#themeToggle,#themeToggleFloat').forEach(b=>b.innerHTML='<i class="fas fa-sun"></i>');}}
+        function toggleTheme(){document.body.classList.toggle('dark');const isDark=document.body.classList.contains('dark');localStorage.setItem('theme',isDark?'dark':'light');const icon=isDark?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';document.querySelectorAll('#themeToggle,#themeToggleFloat').forEach(b=>b.innerHTML=icon);}
+        function logout(){sessionStorage.clear();window.location.href='index.html';}
 
-        function initTheme() {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark');
-                const btns = document.querySelectorAll('#themeToggle, #themeToggleFloat');
-                for (let i = 0; i < btns.length; i++) {
-                    btns[i].innerHTML = '<i class="fas fa-sun"></i>';
-                }
-            }
-        }
+        function createGlitterParticles(){const s=document.querySelector('.sidebar');if(!s)return;document.querySelectorAll('.glitter-particle').forEach(p=>p.remove());for(let i=0;i<40;i++){const p=document.createElement('div');p.className='glitter-particle';p.style.left=Math.random()*100+'%';p.style.top=Math.random()*100+'%';p.style.width=(Math.random()*3+1)+'px';p.style.height=p.style.width;p.style.animationDelay=Math.random()*8+'s';p.style.animationDuration=(Math.random()*5+5)+'s';s.appendChild(p);}}
+        function createCursorNeon(){const c=document.createElement('div');c.className='cursor-neon';document.body.appendChild(c);document.addEventListener('mousemove',(e)=>{c.style.left=e.clientX-15+'px';c.style.top=e.clientY-15+'px';});}
 
-        function toggleTheme() {
-            document.body.classList.toggle('dark');
-            const isDark = document.body.classList.contains('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            const icon = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-            const btns = document.querySelectorAll('#themeToggle, #themeToggleFloat');
-            for (let i = 0; i < btns.length; i++) {
-                btns[i].innerHTML = icon;
-            }
-        }
-
-        function logout() {
-            sessionStorage.clear();
-            window.location.href = 'index.html';
-        }
-
-        // ==================== EFEK VISUAL ====================
-        function createGlitterParticles() {
-            const sidebar = document.querySelector('.sidebar');
-            if (!sidebar) return;
-            const oldParticles = sidebar.querySelectorAll('.glitter-particle');
-            for (let i = 0; i < oldParticles.length; i++) oldParticles[i].remove();
-            for (let i = 0; i < 40; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'glitter-particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                const size = Math.random() * 3 + 1;
-                particle.style.width = size + 'px';
-                particle.style.height = size + 'px';
-                particle.style.animationDelay = Math.random() * 8 + 's';
-                particle.style.animationDuration = (Math.random() * 5 + 5) + 's';
-                sidebar.appendChild(particle);
-            }
-        }
-
-        function createCursorNeon() {
-            const cursor = document.createElement('div');
-            cursor.className = 'cursor-neon';
-            document.body.appendChild(cursor);
-            document.addEventListener('mousemove', function(e) {
-                cursor.style.left = (e.clientX - 15) + 'px';
-                cursor.style.top = (e.clientY - 15) + 'px';
-            });
-        }
-
-        // ==================== EVENT LISTENERS ====================
-        document.addEventListener('DOMContentLoaded', function() {
-            checkSession();
-            initData();
-            initTheme();
-            renderAttendanceTable();
-            createCursorNeon();
-            setTimeout(createGlitterParticles, 500);
-            
-            const menuItems = document.querySelectorAll('.menu-item');
-            for (let i = 0; i < menuItems.length; i++) {
-                menuItems[i].addEventListener('click', function() {
-                    const page = this.getAttribute('data-page');
-                    if (page) switchPage(page);
-                    for (let j = 0; j < menuItems.length; j++) {
-                        menuItems[j].classList.remove('active');
-                    }
-                    this.classList.add('active');
-                });
-            }
-            
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) logoutBtn.addEventListener('click', logout);
-            const logoutTopBtn = document.getElementById('logoutTopBtn');
-            if (logoutTopBtn) logoutTopBtn.addEventListener('click', logout);
-            
-            const themeToggle = document.getElementById('themeToggle');
-            if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
-            const themeToggleFloat = document.getElementById('themeToggleFloat');
-            if (themeToggleFloat) themeToggleFloat.addEventListener('click', toggleTheme);
-            
-            const updateKapten = document.getElementById('updateKaptenSchedule');
-            if (updateKapten) updateKapten.addEventListener('click', renderShiftKapten);
-            const updateKasir = document.getElementById('updateKasirSchedule');
-            if (updateKasir) updateKasir.addEventListener('click', renderShiftKasir);
-            
-            const mobileBtn = document.getElementById('mobileMenuBtn');
-            const sidebar = document.querySelector('.sidebar');
-            if (mobileBtn && sidebar) {
-                mobileBtn.addEventListener('click', function() {
-                    sidebar.classList.toggle('open');
-                });
-            }
+        document.addEventListener('DOMContentLoaded',()=>{checkSession();initData();initTheme();renderAttendanceTable();createCursorNeon();setTimeout(createGlitterParticles,500);
+            document.querySelectorAll('.menu-item').forEach(i=>{i.addEventListener('click',()=>{const p=i.getAttribute('data-page');if(p)switchPage(p);document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));i.classList.add('active');});});
+            document.getElementById('logoutBtn')?.addEventListener('click',logout);document.getElementById('logoutTopBtn')?.addEventListener('click',logout);
+            document.getElementById('themeToggle')?.addEventListener('click',toggleTheme);document.getElementById('themeToggleFloat')?.addEventListener('click',toggleTheme);
+            document.getElementById('updateKaptenSchedule')?.addEventListener('click',renderShiftKapten);document.getElementById('updateKasirSchedule')?.addEventListener('click',renderShiftKasir);
+            const mb=document.getElementById('mobileMenuBtn'),sb=document.querySelector('.sidebar');if(mb&&sb)mb.addEventListener('click',()=>sb.classList.toggle('open'));
         });
-        
-        window.markFinePaid = markFinePaid;
+        window.markFinePaid=markFinePaid;
     </script>
 </body>
 </html>
