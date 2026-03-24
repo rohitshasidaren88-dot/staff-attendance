@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Master Dashboard - Staff Attendance</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,9 +11,19 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f5f0e8; }
+        
+        /* Layout */
         .dashboard { display: flex; min-height: 100vh; }
-        .sidebar { width: 280px; background: linear-gradient(180deg, #1a2a3a, #0f1a24); color: white; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #1a2a3a, #0f1a24);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
         .sidebar-header { padding: 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header h2 i { color: #c4a962; margin-right: 10px; }
         .user-profile-sidebar { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .user-avatar { width: 60px; height: 60px; background: linear-gradient(135deg, #c4a962, #b38f40); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 24px; font-weight: bold; }
         .user-name-sidebar { font-weight: 600; margin-bottom: 5px; }
@@ -29,18 +39,25 @@
         .top-actions { display: flex; gap: 10px; }
         .btn-icon { background: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
         .btn-logout { background: #dc3545; color: white; border: none; padding: 8px 20px; border-radius: 30px; cursor: pointer; }
+        
+        /* Cards */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px; }
         .stat-card { background: white; border-radius: 20px; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .stat-number { font-size: 32px; font-weight: 700; color: #c4a962; }
         .card { background: white; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .card-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #c4a962; }
+        
+        /* Portal */
         .portal-status { text-align: center; padding: 20px; border-radius: 20px; margin-bottom: 25px; }
-        .portal-open { background: linear-gradient(135deg, rgba(40,167,69,0.2), rgba(40,167,69,0.05)); border: 2px solid #28a745; }
+        .portal-open { background: linear-gradient(135deg, rgba(40,167,69,0.2), rgba(40,167,69,0.05)); border: 2px solid #28a745; animation: pulse 1.5s infinite; }
         .portal-closed { background: linear-gradient(135deg, rgba(220,53,69,0.2), rgba(220,53,69,0.05)); border: 2px solid #dc3545; }
+        @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(40,167,69,0.4); } 50% { box-shadow: 0 0 0 20px rgba(40,167,69,0); } }
         .portal-badge { display: inline-block; padding: 10px 25px; border-radius: 50px; font-weight: 600; margin-top: 15px; }
         .portal-badge.open { background: #28a745; color: white; }
         .portal-badge.closed { background: #dc3545; color: white; }
-        .absen-btn { background: linear-gradient(135deg, #c4a962, #b38f40); color: white; border: none; padding: 12px 30px; border-radius: 50px; cursor: pointer; margin-top: 15px; }
+        .absen-btn { background: linear-gradient(135deg, #c4a962, #b38f40); color: white; border: none; padding: 12px 30px; border-radius: 50px; cursor: pointer; margin-top: 15px; font-weight: 600; }
+        
+        /* Tables */
         .table-wrapper { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e0d4c4; }
@@ -52,6 +69,8 @@
         .fine-unpaid { background: #dc3545; color: white; }
         .fine-paid { background: #28a745; color: white; }
         .action-btn { padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer; background: #c4a962; color: white; }
+        
+        /* Shift Tables */
         .shift-section { margin-bottom: 30px; background: white; border-radius: 16px; overflow: hidden; border: 1px solid #e0d4c4; }
         .shift-title { background: linear-gradient(135deg, #c4a962, #b38f40); color: white; padding: 12px 20px; font-weight: 600; }
         .shift-table { width: 100%; border-collapse: collapse; }
@@ -60,9 +79,15 @@
         .shift-table select, .shift-table input { width: 95%; padding: 8px; border: 1px solid #e0d4c4; border-radius: 8px; }
         .date-selector { background: white; padding: 15px; border-radius: 16px; margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; border: 1px solid #e0d4c4; }
         .btn-submit { background: #c4a962; color: white; padding: 8px 20px; border: none; border-radius: 30px; cursor: pointer; }
-        @media (max-width: 768px) { .sidebar { transform: translateX(-100%); position: fixed; } .main-content { margin-left: 0; } }
+        
         .mobile-menu-btn { display: none; background: #c4a962; color: white; width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer; }
-        @media (max-width: 768px) { .mobile-menu-btn { display: flex; align-items: center; justify-content: center; } .sidebar.open { transform: translateX(0); } }
+        @media (max-width: 768px) { 
+            .sidebar { transform: translateX(-100%); position: fixed; } 
+            .main-content { margin-left: 0; } 
+            .stats-grid { grid-template-columns: 1fr; }
+            .mobile-menu-btn { display: flex; align-items: center; justify-content: center; } 
+            .sidebar.open { transform: translateX(0); } 
+        }
     </style>
 </head>
 <body>
@@ -87,21 +112,74 @@
         
         <main class="main-content">
             <div class="top-bar">
-                <div style="display: flex; align-items: center; gap: 15px;"><button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button><h1 class="page-title" id="pageTitle">Dashboard</h1></div>
-                <div class="top-actions"><button class="btn-icon" id="themeToggle"><i class="fas fa-moon"></i></button><button class="btn-logout" id="logoutTopBtn"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+                    <h1 class="page-title" id="pageTitle">Dashboard</h1>
+                </div>
+                <div class="top-actions">
+                    <button class="btn-icon" id="themeToggle"><i class="fas fa-moon"></i></button>
+                    <button class="btn-logout" id="logoutTopBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
             </div>
             
-            <div id="dashboardPage"><div class="stats-grid" id="statsGrid"></div><div id="portalStatus"></div><div class="card"><h3 class="card-title"><i class="fas fa-chart-line"></i> Statistik Kehadiran</h3><canvas id="attendanceChart"></canvas></div></div>
-            <div id="attendancePage" style="display:none"><div class="card"><h3 class="card-title"><i class="fas fa-calendar-check"></i> Rekap Absensi Staff</h3><div class="table-wrapper"><table id="attendanceTable"><thead><th>Nama Staff</th><th>Status</th><th>Check-In</th><th>Shift</th><th>Denda</th></thead><tbody id="attendanceTableBody"></tbody></table></div></div></div>
-            <div id="shiftCsPage" style="display:none"><div class="card"><h3 class="card-title"><i class="fas fa-users"></i> Jadwal SIFT CS</h3><div class="date-selector"><label>Periode: </label><input type="date" id="csStartDate" value="2026-03-13"><span> - </span><input type="date" id="csEndDate" value="2026-03-19"><button class="btn-submit" id="updateCsSchedule">Update</button></div><div id="shiftCsContainer"></div></div></div>
-            <div id="shiftKaptenPage" style="display:none"><div class="card"><h3 class="card-title"><i class="fas fa-user-tie"></i> Jadwal SIFT KAPTEN</h3><div class="date-selector"><label>Periode: </label><input type="date" id="kaptenStartDate" value="2026-03-20"><span> - </span><input type="date" id="kaptenEndDate" value="2026-04-02"><button class="btn-submit" id="updateKaptenSchedule">Update</button></div><div id="shiftKaptenContainer"></div></div></div>
-            <div id="shiftKasirPage" style="display:none"><div class="card"><h3 class="card-title"><i class="fas fa-coins"></i> Jadwal SIFT KASIR</h3><div class="date-selector"><label>Periode: </label><input type="date" id="kasirStartDate" value="2026-03-20"><span> - </span><input type="date" id="kasirEndDate" value="2026-04-02"><button class="btn-submit" id="updateKasirSchedule">Update</button></div><div id="shiftKasirContainer"></div></div></div>
-            <div id="absentPage" style="display:none"><div class="card"><h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> Staff Belum Absen</h3><div class="table-wrapper"><table id="absentTable"><thead><th>Nama Staff</th><th>Role</th><th>Status</th><th>Denda</th><th>Aksi</th></thead><tbody id="absentTableBody"></tbody></table></div></div></div>
+            <div id="dashboardPage">
+                <div class="stats-grid" id="statsGrid"></div>
+                <div id="portalStatus"></div>
+                <div class="card"><h3 class="card-title"><i class="fas fa-chart-line"></i> Statistik Kehadiran</h3><canvas id="attendanceChart"></canvas></div>
+            </div>
+            
+            <div id="attendancePage" style="display:none">
+                <div class="card"><h3 class="card-title"><i class="fas fa-calendar-check"></i> Rekap Absensi Staff</h3>
+                    <div class="table-wrapper"><table id="attendanceTable"><thead><th>Nama Staff</th><th>Status</th><th>Check-In</th><th>Shift</th><th>Denda</th></thead><tbody id="attendanceTableBody"></tbody>}</div>
+                </div>
+            </div>
+            
+            <div id="shiftCsPage" style="display:none">
+                <div class="card">
+                    <h3 class="card-title"><i class="fas fa-users"></i> Jadwal SIFT CS</h3>
+                    <div class="date-selector">
+                        <label>Periode: </label><input type="date" id="csStartDate" value="2026-03-13">
+                        <span> - </span><input type="date" id="csEndDate" value="2026-03-19">
+                        <button class="btn-submit" id="updateCsSchedule">Update</button>
+                    </div>
+                    <div id="shiftCsContainer"></div>
+                </div>
+            </div>
+            
+            <div id="shiftKaptenPage" style="display:none">
+                <div class="card">
+                    <h3 class="card-title"><i class="fas fa-user-tie"></i> Jadwal SIFT KAPTEN</h3>
+                    <div class="date-selector">
+                        <label>Periode: </label><input type="date" id="kaptenStartDate" value="2026-03-20">
+                        <span> - </span><input type="date" id="kaptenEndDate" value="2026-04-02">
+                        <button class="btn-submit" id="updateKaptenSchedule">Update</button>
+                    </div>
+                    <div id="shiftKaptenContainer"></div>
+                </div>
+            </div>
+            
+            <div id="shiftKasirPage" style="display:none">
+                <div class="card">
+                    <h3 class="card-title"><i class="fas fa-coins"></i> Jadwal SIFT KASIR</h3>
+                    <div class="date-selector">
+                        <label>Periode: </label><input type="date" id="kasirStartDate" value="2026-03-20">
+                        <span> - </span><input type="date" id="kasirEndDate" value="2026-04-02">
+                        <button class="btn-submit" id="updateKasirSchedule">Update</button>
+                    </div>
+                    <div id="shiftKasirContainer"></div>
+                </div>
+            </div>
+            
+            <div id="absentPage" style="display:none">
+                <div class="card"><h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> Staff Belum Absen</h3>
+                    <div class="table-wrapper"><table id="absentTable"><thead><th>Nama Staff</th><th>Role</th><th>Status</th><th>Denda</th><th>Aksi</th></thead><tbody id="absentTableBody"></tbody>}</div>
+                </div>
+            </div>
         </main>
     </div>
 
     <script>
-        // DATA STAFF
+        // ==================== DATA ====================
         const staffData = {
             cs: ["REZA PRATAMA EFFENDY","M IKHSAN","STEVEN VITORIUS","FEBRY TIA NATA","WILLY VIJAY SIALLAGAN","APIN","ROHIT SHASIDAREN","INDRA (C7014522) YONG","DONANDA PRATAMA","RAHUL RAO","SABRINA PASKAH SAURMA MANIK","JIWIKA","DEDI SYAHPUTRI","FAJAR RAMADHAN","LODI HERMANTO","RIZKY MAULANA"],
             kapten: ["EDOLI MANULLANG","AINI NADIAH","AGIL PRAYETNO","AGUS SUDIANTO","ROBY SUGARA","JULIO YESAYAS NABABAN"],
@@ -153,7 +231,7 @@
             [...staffData.cs,...staffData.kapten,...staffData.kasir].filter(n=>attendanceData[n]?.status!=='sudah').forEach(n=>{ const f=fineData[n]||{amount:0,paid:false}, r=staffData.cs.includes(n)?'CS':(staffData.kapten.includes(n)?'KAPTEN':'KASIR'); tbody.innerHTML+=`<tr><td>${n}</td><td>${r}</td><td><span class="badge badge-danger">BELUM ABSEN</span></td><td><span class="fine-status ${f.paid?'fine-paid':'fine-unpaid'}" onclick="markFinePaid('${n}')">${f.paid?'DONE':f.amount+' Bath'}</span></td><td><button class="action-btn" onclick="markFinePaid('${n}')">Bayar Denda</button></td></tr>`; });
         }
 
-        // RENDER SHIFT CS - LENGKAP
+        // RENDER SHIFT CS
         function renderShiftCS() {
             const container = document.getElementById('shiftCsContainer'); if(!container) return;
             const startDate = document.getElementById('csStartDate').value, endDate = document.getElementById('csEndDate').value;
@@ -161,27 +239,27 @@
             
             // PAGI
             html += `<div class="shift-section"><div class="shift-title">SHIFT PAGI (08:00 - 18:00)</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></thead><tbody>`;
-            ["REZA PRATAMA EFFENDY","M IKHSAN","STEVEN VITORIUS","FEBRY TIA NATA","WILLY VIJAY SIALLAGAN","APIN"].forEach((name,i)=>{ const job = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT","LIVE CHAT","LIVE CHAT"][i]; html+=`<tr><td><select class="cs-staff">${staffData.cs.map(n=>`<option value="${n}" ${n===name?'selected':''}>${n}</option>`).join('')}</select></td><td><input type="time" value="08:00:00"></td><td><input type="time" value="18:00:00"></td><td><select>${["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j=>`<option value="${j}" ${j===job?'selected':''}>${j}</option>`).join('')}</select></td><td>PAGI</td></tr>`; });
+            ["REZA PRATAMA EFFENDY","M IKHSAN","STEVEN VITORIUS","FEBRY TIA NATA","WILLY VIJAY SIALLAGAN","APIN"].forEach((name,i)=>{ const job = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT","LIVE CHAT","LIVE CHAT"][i]; html+=`<tr><td><select>${staffData.cs.map(n=>`<option value="${n}" ${n===name?'selected':''}>${n}</option>`).join('')}</select></td><td><input type="time" value="08:00:00"></td><td><input type="time" value="18:00:00"></td><td><select>${["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j=>`<option value="${j}" ${j===job?'selected':''}>${j}</option>`).join('')}</select></td><td>PAGI</td></tr>`; });
             html += `</tbody></table></div>`;
             
             // GANTUNG
             html += `<div class="shift-section"><div class="shift-title">SHIFT GANTUNG (11:45 - 22:00)</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></thead><tbody>`;
-            html += `<tr><td><select class="cs-staff">${staffData.cs.map(n=>`<option value="${n}" ${n==="ROHIT SHASIDAREN"?'selected':''}>${n}</option>`).join('')}</select></td><td><input type="time" value="11:45:00"></td><td><input type="time" value="22:00:00"></td><td><select><option>LIVE CHAT</option></select></td><td>GANTUNG</td></tr>`;
+            html += `<tr><td><select>${staffData.cs.map(n=>`<option value="${n}" ${n==="ROHIT SHASIDAREN"?'selected':''}>${n}</option>`).join('')}</select></td><td><input type="time" value="11:45:00"></td><td><input type="time" value="22:00:00"></td><td><select><option>LIVE CHAT</option></select></td><td>GANTUNG</td></tr>`;
             html += `</tbody></table></div>`;
             
             // SORE
             html += `<div class="shift-section"><div class="shift-title">SHIFT SORE (14:45 - 02:00)</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></thead><tbody>`;
-            ["DONANDA PRATAMA","RAHUL RAO","SABRINA PASKAH SAURMA MANIK","JIWIKA","DEDI SYAHPUTRI","FAJAR RAMADHAN"].forEach((name,i)=>{ const job = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT","LIVE CHAT","LIVE CHAT"][i]; html+=`<tr><td><select class="cs-staff">${staffData.cs.map(n=>`<option value="${n}" ${n===name?'selected':''}>${n}</option>`).join('')}</select></td><td><input type="time" value="14:45:00"></td><td><input type="time" value="02:00:00"></td><td><select>${["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j=>`<option value="${j}" ${j===job?'selected':''}>${j}</option>`).join('')}</select></td><td>SORE</td></tr>`; });
+            ["DONANDA PRATAMA","RAHUL RAO","SABRINA PASKAH SAURMA MANIK","JIWIKA","DEDI SYAHPUTRI","FAJAR RAMADHAN"].forEach((name,i)=>{ const job = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT","LIVE CHAT","LIVE CHAT"][i]; html+=`<tr><td><select>${staffData.cs.map(n=>`<option value="${n}" ${n===name?'selected':''}>${n}</option>`).join('')}</select></td><td><input type="time" value="14:45:00"></td><td><input type="time" value="02:00:00"></td><td><select>${["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j=>`<option value="${j}" ${j===job?'selected':''}>${j}</option>`).join('')}</select></td><td>SORE</td></tr>`; });
             html += `</tbody></table></div>`;
             
             // MALAM
             html += `<div class="shift-section"><div class="shift-title">SHIFT MALAM (21:45 - 08:00)</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></thead><tbody>`;
-            ["LODI HERMANTO","RIZKY MAULANA","INDRA (C7014522) YONG","APIN"].forEach((name,i)=>{ const job = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT"][i]; html+=`<tr><td><select class="cs-staff">${staffData.cs.map(n=>`<option value="${n}" ${n===name?'selected':''}>${n}</option>`).join('')}</select></td><td><input type="time" value="21:45:00"></td><td><input type="time" value="08:00:00"></td><td><select>${["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j=>`<option value="${j}" ${j===job?'selected':''}>${j}</option>`).join('')}</select></td><td>MALAM</td></tr>`; });
+            ["LODI HERMANTO","RIZKY MAULANA","INDRA (C7014522) YONG","APIN"].forEach((name,i)=>{ const job = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT"][i]; html+=`<tr><td><select>${staffData.cs.map(n=>`<option value="${n}" ${n===name?'selected':''}>${n}</option>`).join('')}</select></td><td><input type="time" value="21:45:00"></td><td><input type="time" value="08:00:00"></td><td><select>${["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j=>`<option value="${j}" ${j===job?'selected':''}>${j}</option>`).join('')}</select></td><td>MALAM</td></tr>`; });
             html += `</tbody></table></div>`;
             
             // CUTI
             html += `<div class="shift-section"><div class="shift-title">SEDANG CUTI</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>KETERANGAN</th></thead><tbody>`;
-            for(let i=0;i<5;i++) html+=`<tr><td><select class="cs-cut-staff"><option value="">- Pilih Staff -</option>${staffData.cs.map(n=>`<option value="${n}">${n}</option>`).join('')}</select></td><td><input type="text" placeholder="Alasan Cuti"></td></tr>`;
+            for(let i=0;i<5;i++) html+=`<tr><td><select><option value="">- Pilih Staff -</option>${staffData.cs.map(n=>`<option value="${n}">${n}</option>`).join('')}</select></td><td><input type="text" placeholder="Alasan Cuti"></td></tr>`;
             html += `</tbody></table></div>`;
             container.innerHTML = html;
         }
@@ -191,7 +269,7 @@
             const container = document.getElementById('shiftKaptenContainer'); if(!container) return;
             const startDate = document.getElementById('kaptenStartDate').value, endDate = document.getElementById('kaptenEndDate').value;
             let html = `<div class="date-selector"><label>Periode: <strong>${startDate} - ${endDate}</strong></label></div><div class="shift-section"><div class="shift-title">SIFT KAPTEN</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th></thead><tbody>`;
-            ["EDOLI MANULLANG","AINI NADIAH","AGIL PRAYETNO","AGUS SUDIANTO","ROBY SUGARA","JULIO YESAYAS NABABAN"].forEach((name,i)=>{ const shifts = ["08:00:00","11:45:00","14:45:00","15:45:00","21:45:00","08:00:00"]; const jadwal = ["PAGI","SIANG","SORE 1","SORE 2","MALAM","PAGI"]; html+=`<tr><td><select class="kapten-staff">${staffData.kapten.map(n=>`<option value="${n}" ${n===name?'selected':''}>${n}</option>`).join('')}</select></td><td><input type="time" value="${shifts[i]}"></td><td><input type="time" value="${i===0||i===5?'18:00:00':i===1?'22:00:00':'02:00:00'}"></td><td>${jadwal[i]}</td></tr>`; });
+            ["EDOLI MANULLANG","AINI NADIAH","AGIL PRAYETNO","AGUS SUDIANTO","ROBY SUGARA","JULIO YESAYAS NABABAN"].forEach((name,i)=>{ const shifts = ["08:00:00","11:45:00","14:45:00","15:45:00","21:45:00","08:00:00"]; const jadwal = ["PAGI","SIANG","SORE 1","SORE 2","MALAM","PAGI"]; html+=`<tr><td><select>${staffData.kapten.map(n=>`<option value="${n}" ${n===name?'selected':''}>${n}</option>`).join('')}</select></td><td><input type="time" value="${shifts[i]}"></td><td><input type="time" value="${i===0||i===5?'18:00:00':i===1?'22:00:00':'02:00:00'}"></td><td>${jadwal[i]}</td></tr>`; });
             html += `</tbody></table></div>`;
             container.innerHTML = html;
         }
@@ -203,8 +281,8 @@
             let html = `<div class="date-selector"><label>Periode: <strong>${startDate} - ${endDate}</strong></label></div><div class="shift-section"><div class="shift-title">SIFT KASIR</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th></thead><tbody>`;
             const kasirList = ["PAJAR WIRATAMA SARAGIH","HERRY SYAPUTRA","EFRANTA","ADRIAN PATRIC PRESLY SIMARMATA","SYOFIAH","GRACE ANGGAWAN HUTABARAT","DIXIELIA","KELVIN ADRIAN HRP","MUHAMMAD KHAIRIL","NATASYA NABILA","MUHAMMAD NUR RASYDI","MHD RANGGA PRADINATA","SONIYA","KRISTIN AUDIA SITUMORANG","ABELLIA AMANDA","PUTRI GUSVINA","ADAM DANY PUTRA","FRAYOGA HARIANJA","JENNY SAWITRI","DENNY ANDRIAN","YOGES SUARA","RIDUWAN EFENDI","MELITA","RYAN PERMANA","TENGKU FAREL DAVILA RUSLI","CIPTO","JOKO PURNOMO","KAU SALYA","SOPHEAP VISAL","LEA SREY MEY","CHEA AK RUN"];
             const times = [["07:45:00","18:00:00"],["09:45:00","20:00:00"],["11:45:00","22:00:00"],["12:45:00","01:00:00"],["14:45:00","01:00:00"],["17:45:00","04:00:00"],["21:45:00","08:00:00"],["07:45:00","20:00:00"],["09:45:00","22:00:00"],["11:45:00","00:00:00"],["12:45:00","01:00:00"],["17:45:00","06:00:00"],["19:45:00","08:00:00"],["07:45:00","18:00:00"],["09:45:00","20:00:00"],["11:45:00","22:00:00"],["12:45:00","01:00:00"],["14:45:00","01:00:00"],["17:45:00","04:00:00"],["21:45:00","08:00:00"],["07:45:00","20:00:00"],["09:45:00","22:00:00"],["11:45:00","00:00:00"],["12:45:00","01:00:00"],["17:45:00","06:00:00"],["19:45:00","08:00:00"],["07:45:00","18:00:00"],["09:45:00","20:00:00"],["11:45:00","22:00:00"],["12:45:00","01:00:00"],["14:45:00","01:00:00"]];
-            for(let i=0;i<kasirList.length;i++){ html+=`<tr><td><select class="kasir-staff">${staffData.kasir.map(n=>`<option value="${n}" ${n===kasirList[i]?'selected':''}>${n}</option>`).join('')}</select></td><td><input type="time" value="${times[i][0]}"></td><td><input type="time" value="${times[i][1]}"></td><td>Shift ${i+1}</td></tr>`; }
-            html += `</tbody></table></div>`;
+            for(let i=0;i<kasirList.length;i++){ html+=`ox<td><select>${staffData.kasir.map(n=>`<option value="${n}" ${n===kasirList[i]?'selected':''}>${n}</option>`).join('')}</select>ox<td><input type="time" value="${times[i][0]}">ox<td><input type="time" value="${times[i][1]}">ox<td>Shift ${i+1}ox</tr>`; }
+            html += `</tbody>}</div>`;
             container.innerHTML = html;
         }
 
