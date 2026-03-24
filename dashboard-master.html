@@ -2,32 +2,18 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master Dashboard - Staff Attendance</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="style.css">
     <style>
-        /* ==================== GLOBAL STYLES ==================== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f5f0e8; }
-        
-        /* Dashboard Layout */
         .dashboard { display: flex; min-height: 100vh; }
-        
-        /* Sidebar */
-        .sidebar {
-            width: 280px;
-            background: linear-gradient(180deg, #1a2a3a, #0f1a24);
-            color: white;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-        }
+        .sidebar { width: 280px; background: linear-gradient(180deg, #1a2a3a, #0f1a24); color: white; position: fixed; height: 100vh; overflow-y: auto; }
         .sidebar-header { padding: 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .sidebar-header h2 i { color: #c4a962; margin-right: 10px; }
         .user-profile-sidebar { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .user-avatar { width: 60px; height: 60px; background: linear-gradient(135deg, #c4a962, #b38f40); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 24px; font-weight: bold; }
         .user-name-sidebar { font-weight: 600; margin-bottom: 5px; }
@@ -37,33 +23,24 @@
         .menu-item:hover, .menu-item.active { background: rgba(196,169,98,0.1); border-left-color: #c4a962; color: #e8d9b0; }
         .menu-item i { width: 24px; }
         .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px; }
-        
-        /* Main Content */
         .main-content { margin-left: 280px; padding: 20px 30px; width: 100%; }
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #e0d4c4; }
         .page-title { font-size: 24px; font-weight: 600; }
         .top-actions { display: flex; gap: 10px; }
         .btn-icon { background: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
         .btn-logout { background: #dc3545; color: white; border: none; padding: 8px 20px; border-radius: 30px; cursor: pointer; }
-        
-        /* Cards */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px; }
         .stat-card { background: white; border-radius: 20px; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .stat-number { font-size: 32px; font-weight: 700; color: #c4a962; }
         .card { background: white; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .card-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #c4a962; }
-        
-        /* Portal Status */
         .portal-status { text-align: center; padding: 20px; border-radius: 20px; margin-bottom: 25px; }
-        .portal-open { background: linear-gradient(135deg, rgba(40,167,69,0.2), rgba(40,167,69,0.05)); border: 2px solid #28a745; animation: pulse 1.5s infinite; }
+        .portal-open { background: linear-gradient(135deg, rgba(40,167,69,0.2), rgba(40,167,69,0.05)); border: 2px solid #28a745; }
         .portal-closed { background: linear-gradient(135deg, rgba(220,53,69,0.2), rgba(220,53,69,0.05)); border: 2px solid #dc3545; }
-        @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(40,167,69,0.4); } 50% { box-shadow: 0 0 0 20px rgba(40,167,69,0); } }
         .portal-badge { display: inline-block; padding: 10px 25px; border-radius: 50px; font-weight: 600; margin-top: 15px; }
         .portal-badge.open { background: #28a745; color: white; }
         .portal-badge.closed { background: #dc3545; color: white; }
-        .absen-btn { background: linear-gradient(135deg, #c4a962, #b38f40); color: white; border: none; padding: 12px 30px; border-radius: 50px; cursor: pointer; margin-top: 15px; font-weight: 600; }
-        
-        /* Tables */
+        .absen-btn { background: linear-gradient(135deg, #c4a962, #b38f40); color: white; border: none; padding: 12px 30px; border-radius: 50px; cursor: pointer; margin-top: 15px; }
         .table-wrapper { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e0d4c4; }
@@ -75,8 +52,6 @@
         .fine-unpaid { background: #dc3545; color: white; }
         .fine-paid { background: #28a745; color: white; }
         .action-btn { padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer; background: #c4a962; color: white; }
-        
-        /* Shift Tables */
         .shift-section { margin-bottom: 30px; background: white; border-radius: 16px; overflow: hidden; border: 1px solid #e0d4c4; }
         .shift-title { background: linear-gradient(135deg, #c4a962, #b38f40); color: white; padding: 12px 20px; font-weight: 600; }
         .shift-table { width: 100%; border-collapse: collapse; }
@@ -85,13 +60,7 @@
         .shift-table select, .shift-table input { width: 95%; padding: 8px; border: 1px solid #e0d4c4; border-radius: 8px; }
         .date-selector { background: white; padding: 15px; border-radius: 16px; margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; border: 1px solid #e0d4c4; }
         .btn-submit { background: #c4a962; color: white; padding: 8px 20px; border: none; border-radius: 30px; cursor: pointer; }
-        
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); position: fixed; }
-            .main-content { margin-left: 0; }
-            .stats-grid { grid-template-columns: 1fr; }
-        }
-        
+        @media (max-width: 768px) { .sidebar { transform: translateX(-100%); position: fixed; } .main-content { margin-left: 0; } }
         .mobile-menu-btn { display: none; background: #c4a962; color: white; width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer; }
         @media (max-width: 768px) { .mobile-menu-btn { display: flex; align-items: center; justify-content: center; } .sidebar.open { transform: translateX(0); } }
     </style>
@@ -118,497 +87,151 @@
         
         <main class="main-content">
             <div class="top-bar">
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
-                    <h1 class="page-title" id="pageTitle">Dashboard</h1>
-                </div>
-                <div class="top-actions">
-                    <button class="btn-icon" id="themeToggle"><i class="fas fa-moon"></i></button>
-                    <button class="btn-logout" id="logoutTopBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-                </div>
+                <div style="display: flex; align-items: center; gap: 15px;"><button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button><h1 class="page-title" id="pageTitle">Dashboard</h1></div>
+                <div class="top-actions"><button class="btn-icon" id="themeToggle"><i class="fas fa-moon"></i></button><button class="btn-logout" id="logoutTopBtn"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
             </div>
             
-            <div id="dashboardPage">
-                <div class="stats-grid" id="statsGrid"></div>
-                <div id="portalStatus"></div>
-                <div class="card"><h3 class="card-title"><i class="fas fa-chart-line"></i> Statistik Kehadiran</h3><canvas id="attendanceChart" style="max-height: 300px;"></canvas></div>
-            </div>
-            
-            <div id="attendancePage" style="display: none;">
-                <div class="card"><h3 class="card-title"><i class="fas fa-calendar-check"></i> Rekap Absensi Staff</h3>
-                    <div class="table-wrapper"><table id="attendanceTable"><thead> <th>Nama Staff</th><th>Status</th><th>Check-In</th><th>Shift</th><th>Denda</th> </thead><tbody id="attendanceTableBody"></tbody>}</div>
-                </div>
-            </div>
-            
-            <div id="shiftCsPage" style="display: none;">
-                <div class="card">
-                    <h3 class="card-title"><i class="fas fa-users"></i> Jadwal SIFT CS</h3>
-                    <div class="date-selector">
-                        <label>Periode: </label><input type="date" id="csStartDate" value="2026-03-13">
-                        <span> - </span><input type="date" id="csEndDate" value="2026-03-19">
-                        <button class="btn-submit" id="updateCsSchedule">Update</button>
-                    </div>
-                    <div id="shiftCsContainer"></div>
-                </div>
-            </div>
-            
-            <div id="shiftKaptenPage" style="display: none;">
-                <div class="card">
-                    <h3 class="card-title"><i class="fas fa-user-tie"></i> Jadwal SIFT KAPTEN</h3>
-                    <div class="date-selector">
-                        <label>Periode: </label><input type="date" id="kaptenStartDate" value="2026-03-20">
-                        <span> - </span><input type="date" id="kaptenEndDate" value="2026-04-02">
-                        <button class="btn-submit" id="updateKaptenSchedule">Update</button>
-                    </div>
-                    <div id="shiftKaptenContainer"></div>
-                </div>
-            </div>
-            
-            <div id="shiftKasirPage" style="display: none;">
-                <div class="card">
-                    <h3 class="card-title"><i class="fas fa-coins"></i> Jadwal SIFT KASIR</h3>
-                    <div class="date-selector">
-                        <label>Periode: </label><input type="date" id="kasirStartDate" value="2026-03-20">
-                        <span> - </span><input type="date" id="kasirEndDate" value="2026-04-02">
-                        <button class="btn-submit" id="updateKasirSchedule">Update</button>
-                    </div>
-                    <div id="shiftKasirContainer"></div>
-                </div>
-            </div>
-            
-            <div id="absentPage" style="display: none;">
-                <div class="card"><h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> Staff Belum Absen</h3>
-                    <div class="table-wrapper"><table id="absentTable"><thead> <th>Nama Staff</th><th>Role</th><th>Status</th><th>Denda</th><th>Aksi</th> </thead><tbody id="absentTableBody"></tbody>}</div>
-                </div>
-            </div>
+            <div id="dashboardPage"><div class="stats-grid" id="statsGrid"></div><div id="portalStatus"></div><div class="card"><h3 class="card-title"><i class="fas fa-chart-line"></i> Statistik Kehadiran</h3><canvas id="attendanceChart"></canvas></div></div>
+            <div id="attendancePage" style="display:none"><div class="card"><h3 class="card-title"><i class="fas fa-calendar-check"></i> Rekap Absensi Staff</h3><div class="table-wrapper"><table id="attendanceTable"><thead><th>Nama Staff</th><th>Status</th><th>Check-In</th><th>Shift</th><th>Denda</th></thead><tbody id="attendanceTableBody"></tbody></table></div></div></div>
+            <div id="shiftCsPage" style="display:none"><div class="card"><h3 class="card-title"><i class="fas fa-users"></i> Jadwal SIFT CS</h3><div class="date-selector"><label>Periode: </label><input type="date" id="csStartDate" value="2026-03-13"><span> - </span><input type="date" id="csEndDate" value="2026-03-19"><button class="btn-submit" id="updateCsSchedule">Update</button></div><div id="shiftCsContainer"></div></div></div>
+            <div id="shiftKaptenPage" style="display:none"><div class="card"><h3 class="card-title"><i class="fas fa-user-tie"></i> Jadwal SIFT KAPTEN</h3><div class="date-selector"><label>Periode: </label><input type="date" id="kaptenStartDate" value="2026-03-20"><span> - </span><input type="date" id="kaptenEndDate" value="2026-04-02"><button class="btn-submit" id="updateKaptenSchedule">Update</button></div><div id="shiftKaptenContainer"></div></div></div>
+            <div id="shiftKasirPage" style="display:none"><div class="card"><h3 class="card-title"><i class="fas fa-coins"></i> Jadwal SIFT KASIR</h3><div class="date-selector"><label>Periode: </label><input type="date" id="kasirStartDate" value="2026-03-20"><span> - </span><input type="date" id="kasirEndDate" value="2026-04-02"><button class="btn-submit" id="updateKasirSchedule">Update</button></div><div id="shiftKasirContainer"></div></div></div>
+            <div id="absentPage" style="display:none"><div class="card"><h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> Staff Belum Absen</h3><div class="table-wrapper"><table id="absentTable"><thead><th>Nama Staff</th><th>Role</th><th>Status</th><th>Denda</th><th>Aksi</th></thead><tbody id="absentTableBody"></tbody></table></div></div></div>
         </main>
     </div>
 
     <script>
-        // ==================== DATA STAFF ====================
+        // DATA STAFF
         const staffData = {
             cs: ["REZA PRATAMA EFFENDY","M IKHSAN","STEVEN VITORIUS","FEBRY TIA NATA","WILLY VIJAY SIALLAGAN","APIN","ROHIT SHASIDAREN","INDRA (C7014522) YONG","DONANDA PRATAMA","RAHUL RAO","SABRINA PASKAH SAURMA MANIK","JIWIKA","DEDI SYAHPUTRI","FAJAR RAMADHAN","LODI HERMANTO","RIZKY MAULANA"],
             kapten: ["EDOLI MANULLANG","AINI NADIAH","AGIL PRAYETNO","AGUS SUDIANTO","ROBY SUGARA","JULIO YESAYAS NABABAN"],
             kasir: ["PAJAR WIRATAMA SARAGIH","HERRY SYAPUTRA","EFRANTA","ADRIAN PATRIC PRESLY SIMARMATA","SYOFIAH","GRACE ANGGAWAN HUTABARAT","DIXIELIA","KELVIN ADRIAN HRP","MUHAMMAD KHAIRIL","NATASYA NABILA","MUHAMMAD NUR RASYDI","MHD RANGGA PRADINATA","SONIYA","KRISTIN AUDIA SITUMORANG","ABELLIA AMANDA","PUTRI GUSVINA","ADAM DANY PUTRA","FRAYOGA HARIANJA","JENNY SAWITRI","DENNY ANDRIAN","YOGES SUARA","RIDUWAN EFENDI","MELITA","RYAN PERMANA","TENGKU FAREL DAVILA RUSLI","CIPTO","JOKO PURNOMO","KAU SALYA","SOPHEAP VISAL","LEA SREY MEY","CHEA AK RUN"]
         };
 
-        let attendanceData = {};
-        let fineData = {};
-        let attendanceChart = null;
-        let currentUser = null;
+        let attendanceData = {}, fineData = {}, attendanceChart = null, currentUser = null;
 
-        function saveData() {
-            localStorage.setItem('attendance_data', JSON.stringify(attendanceData));
-            localStorage.setItem('fine_data', JSON.stringify(fineData));
-        }
-
+        function saveData() { localStorage.setItem('attendance_data', JSON.stringify(attendanceData)); localStorage.setItem('fine_data', JSON.stringify(fineData)); }
+        
         function initData() {
             const stored = localStorage.getItem('attendance_data');
-            if (stored) {
-                attendanceData = JSON.parse(stored);
-            } else {
-                const allStaff = [...staffData.cs, ...staffData.kapten, ...staffData.kasir];
-                for (let i = 0; i < allStaff.length; i++) {
-                    attendanceData[allStaff[i]] = { status: 'belum', checkInTime: null, shift: null };
-                }
-                saveData();
-            }
+            if (stored) attendanceData = JSON.parse(stored);
+            else { [...staffData.cs, ...staffData.kapten, ...staffData.kasir].forEach(n => attendanceData[n] = { status: 'belum', checkInTime: null, shift: null }); saveData(); }
             const storedFine = localStorage.getItem('fine_data');
-            if (storedFine) {
-                fineData = JSON.parse(storedFine);
-            } else {
-                const allStaff = [...staffData.cs, ...staffData.kapten, ...staffData.kasir];
-                for (let i = 0; i < allStaff.length; i++) {
-                    fineData[allStaff[i]] = { amount: 0, paid: false };
-                }
-                saveData();
-            }
+            if (storedFine) fineData = JSON.parse(storedFine);
+            else { [...staffData.cs, ...staffData.kapten, ...staffData.kasir].forEach(n => fineData[n] = { amount: 0, paid: false }); saveData(); }
         }
 
         function checkSession() {
             const user = JSON.parse(sessionStorage.getItem('currentUser'));
-            if (!user || user.role !== 'master') {
-                window.location.href = 'index.html';
-                return;
-            }
+            if (!user || user.role !== 'master') { window.location.href = 'index.html'; return; }
             currentUser = user;
             document.getElementById('userAvatar').innerHTML = user.fullname.charAt(0).toUpperCase();
             document.getElementById('userName').innerHTML = user.fullname;
             document.getElementById('userRole').innerHTML = user.role.toUpperCase();
         }
 
-        function isPortalOpen() {
-            const now = new Date();
-            const currentTime = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-            const shiftStart = 14 * 3600 + 45 * 60;
-            return (currentTime >= shiftStart - 45*60) && (currentTime <= shiftStart - 10*60);
-        }
-
-        function getPortalStatus() {
-            return isPortalOpen() ? 
-                { open: true, message: "PORTAL TERBUKA", badge: "open", text: "ABSEN" } : 
-                { open: false, message: "PORTAL DITUTUP", badge: "closed", text: "PORTAL DITUTUP" };
-        }
+        function isPortalOpen() { const n=new Date(),t=n.getHours()*3600+n.getMinutes()*60+n.getSeconds(); return t>= (14*3600+45*60 - 45*60) && t<= (14*3600+45*60 - 10*60); }
+        function getPortalStatus() { return isPortalOpen() ? {open:true,message:"PORTAL TERBUKA",badge:"open"} : {open:false,message:"PORTAL DITUTUP",badge:"closed"}; }
 
         function renderDashboard() {
-            const portal = getPortalStatus();
-            let portalHtml = '<div class="portal-status ' + (portal.open ? 'portal-open' : 'portal-closed') + '">';
-            portalHtml += '<h2>' + portal.message + '</h2>';
-            portalHtml += '<p>Portal dibuka 45 menit sebelum shift (14:00) dan ditutup 10 menit sebelum shift (14:35)</p>';
-            portalHtml += '<div class="portal-badge ' + portal.badge + '">' + portal.text + '</div>';
-            if (portal.open) {
-                portalHtml += '<button class="absen-btn" id="absenBtn"><i class="fas fa-fingerprint"></i> ABSEN SEKARANG</button>';
-            }
-            portalHtml += '</div>';
-            document.getElementById('portalStatus').innerHTML = portalHtml;
-            
-            if (portal.open) {
-                const absenBtn = document.getElementById('absenBtn');
-                if (absenBtn) {
-                    absenBtn.onclick = function() {
-                        Swal.fire({
-                            title: 'Pilih Shift',
-                            text: 'Pilih shift Anda hari ini',
-                            icon: 'question',
-                            input: 'select',
-                            inputOptions: {
-                                pagi: 'Pagi (08:00-18:00)',
-                                gantung: 'Gantung (11:45-22:00)',
-                                sore: 'Sore (14:45-01:00)',
-                                malam: 'Malam (21:45-08:00)'
-                            },
-                            showCancelButton: true
-                        }).then(function(result) {
-                            if (result.isConfirmed && result.value) {
-                                const now = new Date();
-                                attendanceData[currentUser.fullname] = {
-                                    status: 'sudah',
-                                    checkInTime: now.toLocaleTimeString('id-ID'),
-                                    shift: result.value,
-                                    date: now.toLocaleDateString('id-ID')
-                                };
-                                saveData();
-                                renderDashboard();
-                                renderAttendanceTable();
-                                renderAbsentTable();
-                                Swal.fire('Sukses!', 'Absen berhasil!', 'success');
-                            }
-                        });
-                    };
-                }
-            }
-            
-            const totalStaff = staffData.cs.length + staffData.kapten.length + staffData.kasir.length;
-            let hadir = 0;
-            for (let key in attendanceData) {
-                if (attendanceData[key] && attendanceData[key].status === 'sudah') hadir++;
-            }
-            const tidakHadir = totalStaff - hadir;
-            let totalDenda = 0;
-            for (let key in fineData) {
-                if (fineData[key] && !fineData[key].paid) totalDenda += fineData[key].amount;
-            }
-            
-            document.getElementById('statsGrid').innerHTML = 
-                '<div class="stat-card"><h3>Total Staff</h3><div class="stat-number">' + totalStaff + '</div></div>' +
-                '<div class="stat-card"><h3>Hadir</h3><div class="stat-number">' + hadir + '</div></div>' +
-                '<div class="stat-card"><h3>Tidak Hadir</h3><div class="stat-number">' + tidakHadir + '</div></div>' +
-                '<div class="stat-card"><h3>Total Denda</h3><div class="stat-number">' + totalDenda + ' Bath</div></div>';
-            
+            const p = getPortalStatus();
+            document.getElementById('portalStatus').innerHTML = `<div class="portal-status ${p.open?'portal-open':'portal-closed'}"><h2>${p.message}</h2><p>Portal dibuka 45 menit sebelum shift (14:00) dan ditutup 10 menit sebelum shift (14:35)</p><div class="portal-badge ${p.badge}">${p.open?'ABSEN':'PORTAL DITUTUP'}</div>${p.open?'<button class="absen-btn" id="absenBtn"><i class="fas fa-fingerprint"></i> ABSEN SEKARANG</button>':''}</div>`;
+            if(p.open){ document.getElementById('absenBtn')?.addEventListener('click',()=>{ Swal.fire({title:'Pilih Shift',text:'Pilih shift Anda',icon:'question',input:'select',inputOptions:{pagi:'Pagi (08:00-18:00)',gantung:'Gantung (11:45-22:00)',sore:'Sore (14:45-01:00)',malam:'Malam (21:45-08:00)'},showCancelButton:true}).then(r=>{if(r.isConfirmed){const now=new Date();attendanceData[currentUser.fullname]={status:'sudah',checkInTime:now.toLocaleTimeString('id-ID'),shift:r.value,date:now.toLocaleDateString('id-ID')};saveData();renderDashboard();renderAttendanceTable();renderAbsentTable();Swal.fire('Sukses!','Absen berhasil!','success');}}); }); }
+            const total=staffData.cs.length+staffData.kapten.length+staffData.kasir.length, hadir=Object.values(attendanceData).filter(a=>a.status==='sudah').length, td=total-hadir, denda=Object.values(fineData).reduce((s,f)=>s+(f.paid?0:f.amount),0);
+            document.getElementById('statsGrid').innerHTML = `<div class="stat-card"><h3>Total Staff</h3><div class="stat-number">${total}</div></div><div class="stat-card"><h3>Hadir</h3><div class="stat-number">${hadir}</div></div><div class="stat-card"><h3>Tidak Hadir</h3><div class="stat-number">${td}</div></div><div class="stat-card"><h3>Total Denda</h3><div class="stat-number">${denda} Bath</div></div>`;
             const ctx = document.getElementById('attendanceChart')?.getContext('2d');
-            if (ctx) {
-                if (attendanceChart) attendanceChart.destroy();
-                attendanceChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: { labels: ['Hadir', 'Tidak Hadir'], datasets: [{ data: [hadir, tidakHadir], backgroundColor: ['#28a745', '#dc3545'] }] },
-                    options: { responsive: true }
-                });
-            }
+            if(ctx){ if(attendanceChart) attendanceChart.destroy(); attendanceChart = new Chart(ctx,{type:'doughnut',data:{labels:['Hadir','Tidak Hadir'],datasets:[{data:[hadir,td],backgroundColor:['#28a745','#dc3545']}]},options:{responsive:true}}); }
         }
 
         function renderAttendanceTable() {
-            const tbody = document.getElementById('attendanceTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            const allStaff = [...staffData.cs, ...staffData.kapten, ...staffData.kasir];
-            for (let i = 0; i < allStaff.length; i++) {
-                const name = allStaff[i];
-                const att = attendanceData[name] || { status: 'belum', checkInTime: null, shift: null };
-                const fine = fineData[name] || { amount: 0, paid: false };
-                tbody.innerHTML += '   <td>' + name + '</td><td><span class="badge ' + (att.status === 'sudah' ? 'badge-success' : 'badge-danger') + '">' + (att.status === 'sudah' ? 'SUDAH ABSEN' : 'BELUM ABSEN') + '</span></td><td>' + (att.checkInTime || '-') + '</td><td>' + (att.shift || '-') + '</td><td><span class="fine-status ' + (fine.paid ? 'fine-paid' : 'fine-unpaid') + '" onclick="markFinePaid(\'' + name + '\')">' + (fine.paid ? 'DONE' : fine.amount + ' Bath') + '</span></td>';
-            }
+            const tbody = document.getElementById('attendanceTableBody'); if(!tbody) return; tbody.innerHTML='';
+            [...staffData.cs,...staffData.kapten,...staffData.kasir].forEach(n=>{ const a=attendanceData[n]||{status:'belum',checkInTime:null,shift:null}, f=fineData[n]||{amount:0,paid:false}; tbody.innerHTML+=`<tr><td>${n}</td><td><span class="badge ${a.status==='sudah'?'badge-success':'badge-danger'}">${a.status==='sudah'?'SUDAH ABSEN':'BELUM ABSEN'}</span></td><td>${a.checkInTime||'-'}</td><td>${a.shift||'-'}</td><td><span class="fine-status ${f.paid?'fine-paid':'fine-unpaid'}" onclick="markFinePaid('${n}')">${f.paid?'DONE':f.amount+' Bath'}</span></td></tr>`; });
         }
 
         function renderAbsentTable() {
-            const tbody = document.getElementById('absentTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            const allStaff = [...staffData.cs, ...staffData.kapten, ...staffData.kasir];
-            for (let i = 0; i < allStaff.length; i++) {
-                const name = allStaff[i];
-                const att = attendanceData[name];
-                if (att && att.status !== 'sudah') {
-                    const fine = fineData[name] || { amount: 0, paid: false };
-                    let role = staffData.cs.includes(name) ? 'CS' : (staffData.kapten.includes(name) ? 'KAPTEN' : 'KASIR');
-                    tbody.innerHTML += '   <td>' + name + '</td><td>' + role + '</td><td><span class="badge badge-danger">BELUM ABSEN</span></td><td><span class="fine-status ' + (fine.paid ? 'fine-paid' : 'fine-unpaid') + '" onclick="markFinePaid(\'' + name + '\')">' + (fine.paid ? 'DONE' : fine.amount + ' Bath') + '</span></td><td><button class="action-btn" onclick="markFinePaid(\'' + name + '\')">Bayar Denda</button></td>';
-                }
-            }
+            const tbody = document.getElementById('absentTableBody'); if(!tbody) return; tbody.innerHTML='';
+            [...staffData.cs,...staffData.kapten,...staffData.kasir].filter(n=>attendanceData[n]?.status!=='sudah').forEach(n=>{ const f=fineData[n]||{amount:0,paid:false}, r=staffData.cs.includes(n)?'CS':(staffData.kapten.includes(n)?'KAPTEN':'KASIR'); tbody.innerHTML+=`<tr><td>${n}</td><td>${r}</td><td><span class="badge badge-danger">BELUM ABSEN</span></td><td><span class="fine-status ${f.paid?'fine-paid':'fine-unpaid'}" onclick="markFinePaid('${n}')">${f.paid?'DONE':f.amount+' Bath'}</span></td><td><button class="action-btn" onclick="markFinePaid('${n}')">Bayar Denda</button></td></tr>`; });
         }
 
-        // ==================== RENDER SHIFT CS ====================
+        // RENDER SHIFT CS - LENGKAP
         function renderShiftCS() {
-            const container = document.getElementById('shiftCsContainer');
-            if (!container) {
-                console.log("Container shiftCsContainer tidak ditemukan");
-                return;
-            }
-            const startDate = document.getElementById('csStartDate').value;
-            const endDate = document.getElementById('csEndDate').value;
-            let html = '<div class="date-selector"><label>Periode: <strong>' + startDate + ' - ' + endDate + '</strong></label></div>';
+            const container = document.getElementById('shiftCsContainer'); if(!container) return;
+            const startDate = document.getElementById('csStartDate').value, endDate = document.getElementById('csEndDate').value;
+            let html = `<div class="date-selector"><label>Periode: <strong>${startDate} - ${endDate}</strong></label></div>`;
             
-            // SHIFT PAGI
-            html += '<div class="shift-section"><div class="shift-title">SHIFT PAGI (08:00 - 18:00)</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></thead><tbody>';
-            const pagiStaff = ["REZA PRATAMA EFFENDY","M IKHSAN","STEVEN VITORIUS","FEBRY TIA NATA","WILLY VIJAY SIALLAGAN","APIN"];
-            const pagiJobdesk = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT","LIVE CHAT","LIVE CHAT"];
-            for (let i = 0; i < pagiStaff.length; i++) {
-                html += '<tr>';
-                html += '<td><select class="cs-staff">' + staffData.cs.map(n => `<option value="${n}" ${n === pagiStaff[i] ? 'selected' : ''}>${n}</option>`).join('') + '</select></td>';
-                html += '<td><input type="time" value="08:00:00"></td>';
-                html += '<td><input type="time" value="18:00:00"></td>';
-                html += '<td><select>' + ["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j => `<option value="${j}" ${j === pagiJobdesk[i] ? 'selected' : ''}>${j}</option>`).join('') + '</select></td>';
-                html += '<td>PAGI</td>';
-                html += '</tr>';
-            }
-            html += '</tbody></table></div>';
+            // PAGI
+            html += `<div class="shift-section"><div class="shift-title">SHIFT PAGI (08:00 - 18:00)</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></thead><tbody>`;
+            ["REZA PRATAMA EFFENDY","M IKHSAN","STEVEN VITORIUS","FEBRY TIA NATA","WILLY VIJAY SIALLAGAN","APIN"].forEach((name,i)=>{ const job = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT","LIVE CHAT","LIVE CHAT"][i]; html+=`<tr><td><select class="cs-staff">${staffData.cs.map(n=>`<option value="${n}" ${n===name?'selected':''}>${n}</option>`).join('')}</select></td><td><input type="time" value="08:00:00"></td><td><input type="time" value="18:00:00"></td><td><select>${["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j=>`<option value="${j}" ${j===job?'selected':''}>${j}</option>`).join('')}</select></td><td>PAGI</td></tr>`; });
+            html += `</tbody></table></div>`;
             
-            // SHIFT GANTUNG
-            html += '<div class="shift-section"><div class="shift-title">SHIFT GANTUNG (11:45 - 22:00)</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></thead><tbody>';
-            html += '<tr>';
-            html += '<td><select class="cs-staff">' + staffData.cs.map(n => `<option value="${n}" ${n === "ROHIT SHASIDAREN" ? 'selected' : ''}>${n}</option>`).join('') + '</select></td>';
-            html += '<td><input type="time" value="11:45:00"></td>';
-            html += '<td><input type="time" value="22:00:00"></td>';
-            html += '<td><select><option>LIVE CHAT</option></select></td>';
-            html += '<td>GANTUNG</td>';
-            html += '</tr>';
-            html += '</tbody></table></div>';
+            // GANTUNG
+            html += `<div class="shift-section"><div class="shift-title">SHIFT GANTUNG (11:45 - 22:00)</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></thead><tbody>`;
+            html += `<tr><td><select class="cs-staff">${staffData.cs.map(n=>`<option value="${n}" ${n==="ROHIT SHASIDAREN"?'selected':''}>${n}</option>`).join('')}</select></td><td><input type="time" value="11:45:00"></td><td><input type="time" value="22:00:00"></td><td><select><option>LIVE CHAT</option></select></td><td>GANTUNG</td></tr>`;
+            html += `</tbody></table></div>`;
             
-            // SHIFT SORE
-            html += '<div class="shift-section"><div class="shift-title">SHIFT SORE (14:45 - 02:00)</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></thead><tbody>';
-            const soreStaff = ["DONANDA PRATAMA","RAHUL RAO","SABRINA PASKAH SAURMA MANIK","JIWIKA","DEDI SYAHPUTRI","FAJAR RAMADHAN"];
-            const soreJobdesk = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT","LIVE CHAT","LIVE CHAT"];
-            for (let i = 0; i < soreStaff.length; i++) {
-                html += '<tr>';
-                html += '<td><select class="cs-staff">' + staffData.cs.map(n => `<option value="${n}" ${n === soreStaff[i] ? 'selected' : ''}>${n}</option>`).join('') + '</select></td>';
-                html += '<td><input type="time" value="14:45:00"></td>';
-                html += '<td><input type="time" value="02:00:00"></td>';
-                html += '<td><select>' + ["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j => `<option value="${j}" ${j === soreJobdesk[i] ? 'selected' : ''}>${j}</option>`).join('') + '</select></td>';
-                html += '<td>SORE</td>';
-                html += '</tr>';
-            }
-            html += '</tbody></table></div>';
+            // SORE
+            html += `<div class="shift-section"><div class="shift-title">SHIFT SORE (14:45 - 02:00)</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></thead><tbody>`;
+            ["DONANDA PRATAMA","RAHUL RAO","SABRINA PASKAH SAURMA MANIK","JIWIKA","DEDI SYAHPUTRI","FAJAR RAMADHAN"].forEach((name,i)=>{ const job = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT","LIVE CHAT","LIVE CHAT"][i]; html+=`<tr><td><select class="cs-staff">${staffData.cs.map(n=>`<option value="${n}" ${n===name?'selected':''}>${n}</option>`).join('')}</select></td><td><input type="time" value="14:45:00"></td><td><input type="time" value="02:00:00"></td><td><select>${["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j=>`<option value="${j}" ${j===job?'selected':''}>${j}</option>`).join('')}</select></td><td>SORE</td></tr>`; });
+            html += `</tbody></table></div>`;
             
-            // SHIFT MALAM
-            html += '<div class="shift-section"><div class="shift-title">SHIFT MALAM (21:45 - 08:00)</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></thead><tbody>';
-            const malamStaff = ["LODI HERMANTO","RIZKY MAULANA","INDRA (C7014522) YONG","APIN"];
-            const malamJobdesk = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT"];
-            for (let i = 0; i < malamStaff.length; i++) {
-                html += '<tr>';
-                html += '<td><select class="cs-staff">' + staffData.cs.map(n => `<option value="${n}" ${n === malamStaff[i] ? 'selected' : ''}>${n}</option>`).join('') + '</select></td>';
-                html += '<td><input type="time" value="21:45:00"></td>';
-                html += '<td><input type="time" value="08:00:00"></td>';
-                html += '<td><select>' + ["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j => `<option value="${j}" ${j === malamJobdesk[i] ? 'selected' : ''}>${j}</option>`).join('') + '</select></td>';
-                html += '<td>MALAM</td>';
-                html += '</tr>';
-            }
-            html += '</tbody></table></div>';
+            // MALAM
+            html += `<div class="shift-section"><div class="shift-title">SHIFT MALAM (21:45 - 08:00)</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></thead><tbody>`;
+            ["LODI HERMANTO","RIZKY MAULANA","INDRA (C7014522) YONG","APIN"].forEach((name,i)=>{ const job = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT"][i]; html+=`<tr><td><select class="cs-staff">${staffData.cs.map(n=>`<option value="${n}" ${n===name?'selected':''}>${n}</option>`).join('')}</select></td><td><input type="time" value="21:45:00"></td><td><input type="time" value="08:00:00"></td><td><select>${["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j=>`<option value="${j}" ${j===job?'selected':''}>${j}</option>`).join('')}</select></td><td>MALAM</td></tr>`; });
+            html += `</tbody></table></div>`;
             
-            // SEDANG CUTI
-            html += '<div class="shift-section"><div class="shift-title">SEDANG CUTI</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>KETERANGAN</th></thead><tbody>';
-            for (let i = 0; i < 5; i++) {
-                html += '<tr>';
-                html += '<td><select class="cs-cut-staff"><option value="">- Pilih Staff -</option>' + staffData.cs.map(n => `<option value="${n}">${n}</option>`).join('') + '</select> </div>';
-                html += '<td><input type="text" placeholder="Alasan Cuti"> </div>';
-                html += ' </div>';
-            }
-            html += '</tbody> </div>';
+            // CUTI
+            html += `<div class="shift-section"><div class="shift-title">SEDANG CUTI</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>KETERANGAN</th></thead><tbody>`;
+            for(let i=0;i<5;i++) html+=`<tr><td><select class="cs-cut-staff"><option value="">- Pilih Staff -</option>${staffData.cs.map(n=>`<option value="${n}">${n}</option>`).join('')}</select></td><td><input type="text" placeholder="Alasan Cuti"></td></tr>`;
+            html += `</tbody></table></div>`;
             container.innerHTML = html;
-            console.log("renderShiftCS selesai");
         }
 
-        // ==================== RENDER SHIFT KAPTEN ====================
+        // RENDER SHIFT KAPTEN
         function renderShiftKapten() {
-            const container = document.getElementById('shiftKaptenContainer');
-            if (!container) return;
-            const startDate = document.getElementById('kaptenStartDate').value;
-            const endDate = document.getElementById('kaptenEndDate').value;
-            let html = '<div class="date-selector"><label>Periode: <strong>' + startDate + ' - ' + endDate + '</strong></label></div>';
-            html += '<div class="shift-section"><div class="shift-title">SIFT KAPTEN</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th></thead><tbody>';
-            const kaptenList = [
-                { name: "EDOLI MANULLANG", checkIn: "08:00:00", checkOut: "18:00:00", jadwal: "PAGI" },
-                { name: "AINI NADIAH", checkIn: "11:45:00", checkOut: "22:00:00", jadwal: "SIANG" },
-                { name: "AGIL PRAYETNO", checkIn: "14:45:00", checkOut: "02:00:00", jadwal: "SORE 1" },
-                { name: "AGUS SUDIANTO", checkIn: "15:45:00", checkOut: "02:00:00", jadwal: "SORE 2" },
-                { name: "ROBY SUGARA", checkIn: "21:45:00", checkOut: "08:00:00", jadwal: "MALAM" },
-                { name: "JULIO YESAYAS NABABAN", checkIn: "08:00:00", checkOut: "18:00:00", jadwal: "PAGI" }
-            ];
-            for (let i = 0; i < kaptenList.length; i++) {
-                const s = kaptenList[i];
-                html += '   ';
-                html += '   <select class="kapten-staff">' + staffData.kapten.map(n => `<option value="${n}" ${n === s.name ? 'selected' : ''}>${n}</option>`).join('') + '</select>   ';
-                html += '   <input type="time" value="' + s.checkIn + '">   ';
-                html += '   <input type="time" value="' + s.checkOut + '">   ';
-                html += '   ' + s.jadwal + '   ';
-                html += '   ';
-            }
-            html += '</tbody>   </div>';
+            const container = document.getElementById('shiftKaptenContainer'); if(!container) return;
+            const startDate = document.getElementById('kaptenStartDate').value, endDate = document.getElementById('kaptenEndDate').value;
+            let html = `<div class="date-selector"><label>Periode: <strong>${startDate} - ${endDate}</strong></label></div><div class="shift-section"><div class="shift-title">SIFT KAPTEN</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th></thead><tbody>`;
+            ["EDOLI MANULLANG","AINI NADIAH","AGIL PRAYETNO","AGUS SUDIANTO","ROBY SUGARA","JULIO YESAYAS NABABAN"].forEach((name,i)=>{ const shifts = ["08:00:00","11:45:00","14:45:00","15:45:00","21:45:00","08:00:00"]; const jadwal = ["PAGI","SIANG","SORE 1","SORE 2","MALAM","PAGI"]; html+=`<tr><td><select class="kapten-staff">${staffData.kapten.map(n=>`<option value="${n}" ${n===name?'selected':''}>${n}</option>`).join('')}</select></td><td><input type="time" value="${shifts[i]}"></td><td><input type="time" value="${i===0||i===5?'18:00:00':i===1?'22:00:00':'02:00:00'}"></td><td>${jadwal[i]}</td></tr>`; });
+            html += `</tbody></table></div>`;
             container.innerHTML = html;
         }
 
-        // ==================== RENDER SHIFT KASIR ====================
+        // RENDER SHIFT KASIR
         function renderShiftKasir() {
-            const container = document.getElementById('shiftKasirContainer');
-            if (!container) return;
-            const startDate = document.getElementById('kasirStartDate').value;
-            const endDate = document.getElementById('kasirEndDate').value;
-            let html = '<div class="date-selector"><label>Periode: <strong>' + startDate + ' - ' + endDate + '</strong></label></div>';
-            html += '<div class="shift-section"><div class="shift-title">SIFT KASIR</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th></thead><tbody>';
-            const kasirList = [
-                { name: "PAJAR WIRATAMA SARAGIH", checkIn: "07:45:00", checkOut: "18:00:00", jadwal: "Shift 1" },
-                { name: "HERRY SYAPUTRA", checkIn: "09:45:00", checkOut: "20:00:00", jadwal: "Shift 2" },
-                { name: "EFRANTA", checkIn: "11:45:00", checkOut: "22:00:00", jadwal: "Shift 3" },
-                { name: "ADRIAN PATRIC PRESLY SIMARMATA", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 4" },
-                { name: "SYOFIAH", checkIn: "14:45:00", checkOut: "01:00:00", jadwal: "Shift 5" },
-                { name: "GRACE ANGGAWAN HUTABARAT", checkIn: "17:45:00", checkOut: "04:00:00", jadwal: "Shift 6" },
-                { name: "DIXIELIA", checkIn: "21:45:00", checkOut: "08:00:00", jadwal: "Shift 7" },
-                { name: "KELVIN ADRIAN HRP", checkIn: "07:45:00", checkOut: "20:00:00", jadwal: "Shift 8" },
-                { name: "MUHAMMAD KHAIRIL", checkIn: "09:45:00", checkOut: "22:00:00", jadwal: "Shift 9" },
-                { name: "NATASYA NABILA", checkIn: "11:45:00", checkOut: "00:00:00", jadwal: "Shift 10" },
-                { name: "MUHAMMAD NUR RASYDI", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 11" },
-                { name: "MHD RANGGA PRADINATA", checkIn: "17:45:00", checkOut: "06:00:00", jadwal: "Shift 12" },
-                { name: "SONIYA", checkIn: "19:45:00", checkOut: "08:00:00", jadwal: "Shift 13" },
-                { name: "KRISTIN AUDIA SITUMORANG", checkIn: "07:45:00", checkOut: "18:00:00", jadwal: "Shift 14" },
-                { name: "ABELLIA AMANDA", checkIn: "09:45:00", checkOut: "20:00:00", jadwal: "Shift 15" },
-                { name: "PUTRI GUSVINA", checkIn: "11:45:00", checkOut: "22:00:00", jadwal: "Shift 16" },
-                { name: "ADAM DANY PUTRA", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 17" },
-                { name: "FRAYOGA HARIANJA", checkIn: "14:45:00", checkOut: "01:00:00", jadwal: "Shift 18" },
-                { name: "JENNY SAWITRI", checkIn: "17:45:00", checkOut: "04:00:00", jadwal: "Shift 19" },
-                { name: "DENNY ANDRIAN", checkIn: "21:45:00", checkOut: "08:00:00", jadwal: "Shift 20" },
-                { name: "YOGES SUARA", checkIn: "07:45:00", checkOut: "20:00:00", jadwal: "Shift 21" },
-                { name: "RIDUWAN EFENDI", checkIn: "09:45:00", checkOut: "22:00:00", jadwal: "Shift 22" },
-                { name: "MELITA", checkIn: "11:45:00", checkOut: "00:00:00", jadwal: "Shift 23" },
-                { name: "RYAN PERMANA", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 24" },
-                { name: "TENGKU FAREL DAVILA RUSLI", checkIn: "17:45:00", checkOut: "06:00:00", jadwal: "Shift 25" },
-                { name: "CIPTO", checkIn: "19:45:00", checkOut: "08:00:00", jadwal: "Shift 26" },
-                { name: "JOKO PURNOMO", checkIn: "07:45:00", checkOut: "18:00:00", jadwal: "Shift 27" },
-                { name: "KAU SALYA", checkIn: "09:45:00", checkOut: "20:00:00", jadwal: "Shift 28" },
-                { name: "SOPHEAP VISAL", checkIn: "11:45:00", checkOut: "22:00:00", jadwal: "Shift 29" },
-                { name: "LEA SREY MEY", checkIn: "12:45:00", checkOut: "01:00:00", jadwal: "Shift 30" },
-                { name: "CHEA AK RUN", checkIn: "14:45:00", checkOut: "01:00:00", jadwal: "Shift 31" }
-            ];
-            for (let i = 0; i < kasirList.length; i++) {
-                const s = kasirList[i];
-                html += '   ';
-                html += '   <select class="kasir-staff">' + staffData.kasir.map(n => `<option value="${n}" ${n === s.name ? 'selected' : ''}>${n}</option>`).join('') + '</select>   ';
-                html += '   <input type="time" value="' + s.checkIn + '">   ';
-                html += '   <input type="time" value="' + s.checkOut + '">   ';
-                html += '   ' + s.jadwal + '   ';
-                html += '   ';
-            }
-            html += '</tbody>   </div>';
+            const container = document.getElementById('shiftKasirContainer'); if(!container) return;
+            const startDate = document.getElementById('kasirStartDate').value, endDate = document.getElementById('kasirEndDate').value;
+            let html = `<div class="date-selector"><label>Periode: <strong>${startDate} - ${endDate}</strong></label></div><div class="shift-section"><div class="shift-title">SIFT KASIR</div><table class="shift-table"><thead><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JADWAL</th></thead><tbody>`;
+            const kasirList = ["PAJAR WIRATAMA SARAGIH","HERRY SYAPUTRA","EFRANTA","ADRIAN PATRIC PRESLY SIMARMATA","SYOFIAH","GRACE ANGGAWAN HUTABARAT","DIXIELIA","KELVIN ADRIAN HRP","MUHAMMAD KHAIRIL","NATASYA NABILA","MUHAMMAD NUR RASYDI","MHD RANGGA PRADINATA","SONIYA","KRISTIN AUDIA SITUMORANG","ABELLIA AMANDA","PUTRI GUSVINA","ADAM DANY PUTRA","FRAYOGA HARIANJA","JENNY SAWITRI","DENNY ANDRIAN","YOGES SUARA","RIDUWAN EFENDI","MELITA","RYAN PERMANA","TENGKU FAREL DAVILA RUSLI","CIPTO","JOKO PURNOMO","KAU SALYA","SOPHEAP VISAL","LEA SREY MEY","CHEA AK RUN"];
+            const times = [["07:45:00","18:00:00"],["09:45:00","20:00:00"],["11:45:00","22:00:00"],["12:45:00","01:00:00"],["14:45:00","01:00:00"],["17:45:00","04:00:00"],["21:45:00","08:00:00"],["07:45:00","20:00:00"],["09:45:00","22:00:00"],["11:45:00","00:00:00"],["12:45:00","01:00:00"],["17:45:00","06:00:00"],["19:45:00","08:00:00"],["07:45:00","18:00:00"],["09:45:00","20:00:00"],["11:45:00","22:00:00"],["12:45:00","01:00:00"],["14:45:00","01:00:00"],["17:45:00","04:00:00"],["21:45:00","08:00:00"],["07:45:00","20:00:00"],["09:45:00","22:00:00"],["11:45:00","00:00:00"],["12:45:00","01:00:00"],["17:45:00","06:00:00"],["19:45:00","08:00:00"],["07:45:00","18:00:00"],["09:45:00","20:00:00"],["11:45:00","22:00:00"],["12:45:00","01:00:00"],["14:45:00","01:00:00"]];
+            for(let i=0;i<kasirList.length;i++){ html+=`<tr><td><select class="kasir-staff">${staffData.kasir.map(n=>`<option value="${n}" ${n===kasirList[i]?'selected':''}>${n}</option>`).join('')}</select></td><td><input type="time" value="${times[i][0]}"></td><td><input type="time" value="${times[i][1]}"></td><td>Shift ${i+1}</td></tr>`; }
+            html += `</tbody></table></div>`;
             container.innerHTML = html;
         }
 
-        function markFinePaid(name) {
-            if (fineData[name] && !fineData[name].paid) {
-                Swal.fire({
-                    title: 'Konfirmasi',
-                    text: 'Denda ' + fineData[name].amount + ' Bath untuk ' + name + ' sudah dibayar?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya, Sudah Dibayar'
-                }).then(function(result) {
-                    if (result.isConfirmed) {
-                        fineData[name].paid = true;
-                        saveData();
-                        renderAttendanceTable();
-                        renderAbsentTable();
-                        renderDashboard();
-                        Swal.fire('Sukses!', 'Denda telah dibayar', 'success');
-                    }
-                });
-            }
+        function markFinePaid(n){ if(fineData[n]&&!fineData[n].paid){ Swal.fire({title:'Konfirmasi',text:`Denda ${fineData[n].amount} Bath untuk ${n} sudah dibayar?`,icon:'question',showCancelButton:true,confirmButtonText:'Ya, Sudah Dibayar'}).then(r=>{if(r.isConfirmed){fineData[n].paid=true;saveData();renderAttendanceTable();renderAbsentTable();renderDashboard();Swal.fire('Sukses!','Denda telah dibayar','success');}}); } }
+
+        function switchPage(p){
+            ['dashboard','attendance','shiftCs','shiftKapten','shiftKasir','absent'].forEach(i=>{const e=document.getElementById(i+'Page');if(e)e.style.display=i===p?'block':'none';});
+            const titles={dashboard:'Dashboard',attendance:'Jadwal Absen Staff',shiftCs:'SIFT CS',shiftKapten:'SIFT KAPTEN',shiftKasir:'SIFT KASIR',absent:'Data Staff Tidak Absen'};
+            document.getElementById('pageTitle').innerHTML=titles[p]||'Dashboard';
+            if(p==='dashboard')renderDashboard(); if(p==='attendance')renderAttendanceTable(); if(p==='shiftCs')renderShiftCS(); if(p==='shiftKapten')renderShiftKapten(); if(p==='shiftKasir')renderShiftKasir(); if(p==='absent')renderAbsentTable();
         }
 
-        function switchPage(pageId) {
-            const pages = ['dashboard', 'attendance', 'shiftCs', 'shiftKapten', 'shiftKasir', 'absent'];
-            for (let i = 0; i < pages.length; i++) {
-                const el = document.getElementById(pages[i] + 'Page');
-                if (el) el.style.display = (pages[i] === pageId) ? 'block' : 'none';
-            }
-            const titles = { dashboard: 'Dashboard', attendance: 'Jadwal Absen Staff', shiftCs: 'SIFT CS', shiftKapten: 'SIFT KAPTEN', shiftKasir: 'SIFT KASIR', absent: 'Data Staff Tidak Absen' };
-            document.getElementById('pageTitle').innerHTML = titles[pageId] || 'Dashboard';
-            if (pageId === 'dashboard') renderDashboard();
-            if (pageId === 'attendance') renderAttendanceTable();
-            if (pageId === 'shiftCs') renderShiftCS();
-            if (pageId === 'shiftKapten') renderShiftKapten();
-            if (pageId === 'shiftKasir') renderShiftKasir();
-            if (pageId === 'absent') renderAbsentTable();
-        }
+        function initTheme(){ if(localStorage.getItem('theme')==='dark'){ document.body.classList.add('dark'); document.querySelectorAll('#themeToggle,#themeToggleFloat').forEach(b=>b.innerHTML='<i class="fas fa-sun"></i>'); } }
+        function toggleTheme(){ document.body.classList.toggle('dark'); const isDark=document.body.classList.contains('dark'); localStorage.setItem('theme',isDark?'dark':'light'); const icon=isDark?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>'; document.querySelectorAll('#themeToggle,#themeToggleFloat').forEach(b=>b.innerHTML=icon); }
+        function logout(){ sessionStorage.clear(); window.location.href='index.html'; }
 
-        function initTheme() {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark');
-                const btns = document.querySelectorAll('#themeToggle, #themeToggleFloat');
-                for (let i = 0; i < btns.length; i++) btns[i].innerHTML = '<i class="fas fa-sun"></i>';
-            }
-        }
-
-        function toggleTheme() {
-            document.body.classList.toggle('dark');
-            const isDark = document.body.classList.contains('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            const icon = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-            const btns = document.querySelectorAll('#themeToggle, #themeToggleFloat');
-            for (let i = 0; i < btns.length; i++) btns[i].innerHTML = icon;
-        }
-
-        function logout() {
-            sessionStorage.clear();
-            window.location.href = 'index.html';
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            checkSession();
-            initData();
-            initTheme();
-            renderDashboard();
-            
-            const menuItems = document.querySelectorAll('.menu-item');
-            for (let i = 0; i < menuItems.length; i++) {
-                menuItems[i].addEventListener('click', function() {
-                    const page = this.getAttribute('data-page');
-                    if (page) switchPage(page);
-                    for (let j = 0; j < menuItems.length; j++) menuItems[j].classList.remove('active');
-                    this.classList.add('active');
-                });
-            }
-            
-            document.getElementById('logoutBtn')?.addEventListener('click', logout);
-            document.getElementById('logoutTopBtn')?.addEventListener('click', logout);
-            document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
-            
-            document.getElementById('updateCsSchedule')?.addEventListener('click', renderShiftCS);
-            document.getElementById('updateKaptenSchedule')?.addEventListener('click', renderShiftKapten);
-            document.getElementById('updateKasirSchedule')?.addEventListener('click', renderShiftKasir);
-            
-            const mobileBtn = document.getElementById('mobileMenuBtn');
-            const sidebar = document.querySelector('.sidebar');
-            if (mobileBtn && sidebar) {
-                mobileBtn.addEventListener('click', function() { sidebar.classList.toggle('open'); });
-            }
+        document.addEventListener('DOMContentLoaded',()=>{
+            checkSession(); initData(); initTheme(); renderDashboard();
+            document.querySelectorAll('.menu-item').forEach(i=>{ i.addEventListener('click',()=>{ const p=i.getAttribute('data-page'); if(p) switchPage(p); document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active')); i.classList.add('active'); }); });
+            document.getElementById('logoutBtn')?.addEventListener('click',logout); document.getElementById('logoutTopBtn')?.addEventListener('click',logout);
+            document.getElementById('themeToggle')?.addEventListener('click',toggleTheme);
+            document.getElementById('updateCsSchedule')?.addEventListener('click',renderShiftCS);
+            document.getElementById('updateKaptenSchedule')?.addEventListener('click',renderShiftKapten);
+            document.getElementById('updateKasirSchedule')?.addEventListener('click',renderShiftKasir);
+            const mb=document.getElementById('mobileMenuBtn'), sb=document.querySelector('.sidebar'); if(mb&&sb) mb.addEventListener('click',()=>sb.classList.toggle('open'));
         });
-        
-        window.markFinePaid = markFinePaid;
+        window.markFinePaid=markFinePaid;
     </script>
 </body>
 </html>
