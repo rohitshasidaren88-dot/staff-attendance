@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Shift CS</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #f0f0f0; }
+        select, input { width: 100%; }
+        .section { margin-bottom: 30px; border: 1px solid #ddd; padding: 10px; border-radius: 8px; }
+        .section h3 { margin-top: 0; background: #c4a962; color: white; padding: 8px; border-radius: 6px; }
+    </style>
+</head>
+<body>
+    <h1>Test Tabel Shift CS</h1>
+    <div id="shiftCsContainer"></div>
+
+    <script>
+        // Data Staff CS
+        const staffDataCS = [
+            "REZA PRATAMA EFFENDY","M IKHSAN","STEVEN VITORIUS","FEBRY TIA NATA",
+            "WILLY VIJAY SIALLAGAN","APIN","ROHIT SHASIDAREN","INDRA (C7014522) YONG",
+            "DONANDA PRATAMA","RAHUL RAO","SABRINA PASKAH SAURMA MANIK","JIWIKA",
+            "DEDI SYAHPUTRI","FAJAR RAMADHAN","LODI HERMANTO","RIZKY MAULANA"
+        ];
+
+        function renderShiftCS() {
+            const container = document.getElementById('shiftCsContainer');
+            if (!container) return;
+
+            let html = '';
+
+            // SHIFT PAGI
+            html += `<div class="section"><h3>SHIFT PAGI (08:00 - 18:00)</h3><table><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead><tbody>`;
+            const pagiStaff = ["REZA PRATAMA EFFENDY","M IKHSAN","STEVEN VITORIUS","FEBRY TIA NATA","WILLY VIJAY SIALLAGAN","APIN"];
+            const pagiJobdesk = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT","LIVE CHAT","LIVE CHAT"];
+            for (let i = 0; i < pagiStaff.length; i++) {
+                html += `<tr>
+                            <td><select>${staffDataCS.map(n => `<option value="${n}" ${n === pagiStaff[i] ? 'selected' : ''}>${n}</option>`).join('')}</select></td>
+                            <td><input type="time" value="08:00:00"></td>
+                            <td><input type="time" value="18:00:00"></td>
+                            <td><select>${["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j => `<option value="${j}" ${j === pagiJobdesk[i] ? 'selected' : ''}>${j}</option>`).join('')}</select></td>
+                            <td>PAGI</td>
+                          </tr>`;
+            }
+            html += `</tbody></table></div>`;
+
+            // SHIFT GANTUNG
+            html += `<div class="section"><h3>SHIFT GANTUNG (11:45 - 22:00)</h3><table><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead><tbody>`;
+            html += `<tr>
+                        <td><select>${staffDataCS.map(n => `<option value="${n}" ${n === "ROHIT SHASIDAREN" ? 'selected' : ''}>${n}</option>`).join('')}</select></td>
+                        <td><input type="time" value="11:45:00"></td>
+                        <td><input type="time" value="22:00:00"></td>
+                        <td><select><option>LIVE CHAT</option></select></td>
+                        <td>GANTUNG</td>
+                      </tr>`;
+            html += `</tbody></table></div>`;
+
+            // SHIFT SORE
+            html += `<div class="section"><h3>SHIFT SORE (14:45 - 02:00)</h3><table><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead><tbody>`;
+            const soreStaff = ["DONANDA PRATAMA","RAHUL RAO","SABRINA PASKAH SAURMA MANIK","JIWIKA","DEDI SYAHPUTRI","FAJAR RAMADHAN"];
+            const soreJobdesk = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT","LIVE CHAT","LIVE CHAT"];
+            for (let i = 0; i < soreStaff.length; i++) {
+                html += `<tr>
+                            <td><select>${staffDataCS.map(n => `<option value="${n}" ${n === soreStaff[i] ? 'selected' : ''}>${n}</option>`).join('')}</select></td>
+                            <td><input type="time" value="14:45:00"></td>
+                            <td><input type="time" value="02:00:00"></td>
+                            <td><select>${["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j => `<option value="${j}" ${j === soreJobdesk[i] ? 'selected' : ''}>${j}</option>`).join('')}</select></td>
+                            <td>SORE</td>
+                          </tr>`;
+            }
+            html += `</tbody></table></div>`;
+
+            // SHIFT MALAM
+            html += `<div class="section"><h3>SHIFT MALAM (21:45 - 08:00)</h3><table><thead><tr><th>NAMA STAFF</th><th>CHECK-IN</th><th>CHECK-OUT</th><th>JOBDESK</th><th>JADWAL</th></tr></thead><tbody>`;
+            const malamStaff = ["LODI HERMANTO","RIZKY MAULANA","INDRA (C7014522) YONG","APIN"];
+            const malamJobdesk = ["LINE UTAMA","LINE BACK-UP","LIVE CHAT","LIVE CHAT"];
+            for (let i = 0; i < malamStaff.length; i++) {
+                html += `<tr>
+                            <td><select>${staffDataCS.map(n => `<option value="${n}" ${n === malamStaff[i] ? 'selected' : ''}>${n}</option>`).join('')}</select></td>
+                            <td><input type="time" value="21:45:00"></td>
+                            <td><input type="time" value="08:00:00"></td>
+                            <td><select>${["LINE UTAMA","LINE BACK-UP","LIVE CHAT"].map(j => `<option value="${j}" ${j === malamJobdesk[i] ? 'selected' : ''}>${j}</option>`).join('')}</select></td>
+                            <td>MALAM</td>
+                          </tr>`;
+            }
+            html += `</tbody></table></div>`;
+
+            container.innerHTML = html;
+        }
+
+        renderShiftCS();
+    </script>
+</body>
+</html>
