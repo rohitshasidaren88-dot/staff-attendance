@@ -617,6 +617,27 @@
         });
         
         window.markFinePaid = markFinePaid;
+        function createGlitterParticles() {
+    const body = document.body;
+    for (let i = 0; i < 60; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'glitter-particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.width = (Math.random() * 4 + 1) + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.animationDelay = Math.random() * 8 + 's';
+        particle.style.animationDuration = (Math.random() * 6 + 4) + 's';
+        document.body.appendChild(particle);
+    }
+}
+
+// Panggil fungsi setelah halaman dimuat
+document.addEventListener('DOMContentLoaded', function() {
+    createGlitterParticles();
+    // refresh particles setiap 10 detik untuk efek dinamis
+    setInterval(createGlitterParticles, 10000);
+});
     </script>
 </body>
 </html>
