@@ -96,24 +96,44 @@
     </style>
 </head>
 <body>
-    <div class="dashboard">
-        <aside class="sidebar">
-          <div class="user-profile-sidebar">
-    <div class="user-avatar" id="userAvatar">M</div>
-    <div class="user-name-sidebar" id="userName">Master Admin</div>
-    <div class="user-role-sidebar" id="userRole">MASTER</div>
-</div>
-            </div>
-            <div class="sidebar-menu">
-                <div class="menu-item active" data-page="dashboard"><i class="fas fa-chart-pie"></i><span>Dashboard</span></div>
-                <div class="menu-item" data-page="attendance"><i class="fas fa-calendar-check"></i><span>Jadwal Absen Staff</span></div>
-                <div class="menu-item" data-page="shiftCs"><i class="fas fa-users"></i><span>SIFT CS</span></div>
-                <div class="menu-item" data-page="shiftKapten"><i class="fas fa-user-tie"></i><span>SIFT KAPTEN</span></div>
-                <div class="menu-item" data-page="shiftKasir"><i class="fas fa-coins"></i><span>SIFT KASIR</span></div>
-                <div class="menu-item" data-page="absent"><i class="fas fa-exclamation-triangle"></i><span>Data Staff Tidak Absen</span></div>
-            </div>
-            <div class="sidebar-footer"><div class="menu-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span>Logout</span></div></div>
-        </aside>
+    <aside class="sidebar">
+    <div class="sidebar-header">
+        <h2><i class="fas fa-users"></i> Staff Attendance</h2>
+    </div>
+    <div class="user-profile-sidebar">
+        <div class="logo-icon" style="text-align: center; margin-bottom: 15px;">
+            <img src="assets/logo.png" alt="Logo" style="width: 80px; height: 80px; object-fit: cover; border-radius: 16px;">
+        </div>
+        <div id="userAvatar" style="display: none;"></div>
+        <div class="user-name-sidebar" id="userName">Management</div>
+        <div class="user-role-sidebar" id="userRole">MASTER</div>
+    </div>
+    <div class="sidebar-menu">
+        <div class="menu-item active" data-page="dashboard">
+            <i class="fas fa-chart-pie"></i><span>Dashboard</span>
+        </div>
+        <div class="menu-item" data-page="attendance">
+            <i class="fas fa-calendar-check"></i><span>Jadwal Absen Staff</span>
+        </div>
+        <div class="menu-item" data-page="shiftCs">
+            <i class="fas fa-users"></i><span>SIFT CS</span>
+        </div>
+        <div class="menu-item" data-page="shiftKapten">
+            <i class="fas fa-user-tie"></i><span>SIFT KAPTEN</span>
+        </div>
+        <div class="menu-item" data-page="shiftKasir">
+            <i class="fas fa-coins"></i><span>SIFT KASIR</span>
+        </div>
+        <div class="menu-item" data-page="absent">
+            <i class="fas fa-exclamation-triangle"></i><span>Data Staff Tidak Absen</span>
+        </div>
+    </div>
+    <div class="sidebar-footer">
+        <div class="menu-item" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+        </div>
+    </div>
+</aside>
         
         <main class="main-content">
             <div class="top-bar">
