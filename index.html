@@ -2,293 +2,83 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Staff Attendance - Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Staff Attendance System - Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
-            }
-        }
-    </script>
-    <style>
-        /* Tambahan khusus login */
-        .login-page {
-            position: relative;
-            z-index: 1;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: transparent;
-        }
-        .login-card {
-            background: rgba(10, 5, 8, 0.75);
-            backdrop-filter: blur(12px);
-            border-radius: 24px;
-            padding: 40px;
-            width: 100%;
-            max-width: 420px;
-            border: 1px solid rgba(255, 51, 102, 0.3);
-            box-shadow: 0 0 30px rgba(255, 51, 102, 0.2);
-            transition: all 0.3s;
-        }
-        .login-card:hover {
-            border-color: rgba(255, 51, 102, 0.8);
-            box-shadow: 0 0 40px rgba(255, 51, 102, 0.4);
-        }
-        .logo-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #ff3366, #cc2255);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-        }
-        .logo-icon i {
-            font-size: 40px;
-            color: white;
-        }
-        h1 {
-            font-size: 28px;
-            text-align: center;
-            background: linear-gradient(135deg, #ff3366, #ff6688);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 8px;
-        }
-        .subtitle {
-            text-align: center;
-            color: #ff6688;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-        .input-group-login {
-            position: relative;
-            margin-bottom: 20px;
-        }
-        .input-group-login i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #ff6688;
-        }
-        .input-group-login input {
-            width: 100%;
-            padding: 14px 15px 14px 45px;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,51,102,0.3);
-            border-radius: 12px;
-            color: white;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-        .input-group-login input:focus {
-            outline: none;
-            border-color: #ff3366;
-            box-shadow: 0 0 10px rgba(255,51,102,0.5);
-        }
-        .login-btn {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #ff3366, #cc2255);
-            border: none;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 600;
-            color: white;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: all 0.3s;
-        }
-        .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 20px rgba(255,51,102,0.5);
-        }
-        .error-msg {
-            color: #ff6688;
-            background: rgba(255,51,102,0.1);
-            padding: 10px;
-            border-radius: 10px;
-            margin: 10px 0;
-            display: none;
-            text-align: center;
-        }
-        .demo-info {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,51,102,0.3);
-            font-size: 12px;
-            text-align: center;
-            color: rgba(255,255,255,0.6);
-        }
-    </style>
 </head>
 <body>
-    <div id="canvas-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;"></div>
-    
-    <div class="login-page">
+    <canvas id="glitterCanvas" class="glitter-canvas"></canvas>
+    <div id="loginPage" class="login-page">
         <div class="login-card">
-            <div class="logo-icon"><i class="fas fa-users"></i></div>
-            <h1>Staff Attendance System</h1>
-            <p class="subtitle">Premium Management System</p>
-            
+            <div class="logo-icon"><img src="assets/logo.png" alt="Logo"></div>
+            <h1>YOWES TOGEL</h1>
+            <p class="subtitle">Yowes Management System</p>
             <div class="input-group-login">
                 <i class="fas fa-envelope"></i>
-                <input type="email" id="loginEmail" placeholder="Email" autocomplete="off">
+                <input type="email" id="loginEmail" placeholder="Email">
             </div>
             <div class="input-group-login">
                 <i class="fas fa-lock"></i>
                 <input type="password" id="loginPassword" placeholder="Password">
             </div>
-            
             <div id="loginError" class="error-msg"></div>
-            
-            <button class="login-btn" id="loginButton">
-                <i class="fas fa-sign-in-alt"></i> Login
-            </button>
-            
-            <div class="demo-info">
-                <i class="fas fa-info-circle"></i> Demo Account:<br>
-                <strong>master@attendance.com</strong> / master123<br>
-                <strong>cs@attendance.com</strong> / cs123<br>
-                <strong>kapten@attendance.com</strong> / kapten123
-            </div>
+            <button class="login-btn" id="loginButton">Login</button>
         </div>
     </div>
+    <script>
+        // Background glitter merah
+        const canvas = document.getElementById('glitterCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const particleCount = 200;
 
-    <script type="module">
-        import * as THREE from 'three';
-
-        const container = document.getElementById('canvas-container');
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x0a0508);
-        scene.fog = new THREE.FogExp2(0x0a0508, 0.008);
-
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 4, 16);
-        camera.lookAt(0, 0, 0);
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        container.appendChild(renderer.domElement);
-
-        // Lights
-        const ambientLight = new THREE.AmbientLight(0x222222);
-        scene.add(ambientLight);
-        const pointLight1 = new THREE.PointLight(0xff3366, 0.8);
-        pointLight1.position.set(5, 8, 5);
-        scene.add(pointLight1);
-        const pointLight2 = new THREE.PointLight(0xff6688, 0.5);
-        pointLight2.position.set(-4, 5, -4);
-        scene.add(pointLight2);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-        directionalLight.position.set(0, 10, 0);
-        scene.add(directionalLight);
-
-        // Grid floor dengan neon (tanpa kubus)
-        const gridHelper = new THREE.GridHelper(30, 40, 0xff3366, 0xff6688);
-        gridHelper.position.y = -2.5;
-        gridHelper.material.transparent = true;
-        gridHelper.material.opacity = 0.3;
-        scene.add(gridHelper);
-
-        // Floating particles (glitter)
-        const particleCount = 2500;
-        const particleGeometry = new THREE.BufferGeometry();
-        const particlePositions = new Float32Array(particleCount * 3);
-        const particleColors = new Float32Array(particleCount * 3);
-        for (let i = 0; i < particleCount; i++) {
-            particlePositions[i*3] = (Math.random() - 0.5) * 28;
-            particlePositions[i*3+1] = (Math.random() - 0.5) * 12 + 1;
-            particlePositions[i*3+2] = (Math.random() - 0.5) * 20 - 5;
-            particleColors[i*3] = 1;
-            particleColors[i*3+1] = 0.2 + Math.random() * 0.4;
-            particleColors[i*3+2] = 0.2 + Math.random() * 0.4;
-        }
-        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-        particleGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
-        const particleMaterial = new THREE.PointsMaterial({ size: 0.045, vertexColors: true, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
-        const particles = new THREE.Points(particleGeometry, particleMaterial);
-        scene.add(particles);
-
-        // Additional floating lines for neon effect
-        const lineCount = 80;
-        const lineMaterial = new THREE.LineBasicMaterial({ color: 0xff3366 });
-        for (let i = 0; i < lineCount; i++) {
-            const points = [];
-            const y = -2 + Math.random() * 6;
-            const z = -8 + Math.random() * 16;
-            points.push(new THREE.Vector3(-12, y, z));
-            points.push(new THREE.Vector3(12, y, z));
-            const geometry = new THREE.BufferGeometry().setFromPoints(points);
-            const line = new THREE.Line(geometry, lineMaterial);
-            line.userData = { speed: 0.2 + Math.random() * 0.3, offset: Math.random() * Math.PI * 2 };
-            scene.add(line);
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         }
 
-        // Stars
-        const starGeometry = new THREE.BufferGeometry();
-        const starCount = 1500;
-        const starPositions = new Float32Array(starCount * 3);
-        for (let i = 0; i < starCount; i++) {
-            starPositions[i*3] = (Math.random() - 0.5) * 200;
-            starPositions[i*3+1] = (Math.random() - 0.5) * 100;
-            starPositions[i*3+2] = (Math.random() - 0.5) * 80 - 40;
+        function createParticles() {
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 2 + 1,
+                    alpha: Math.random() * 0.5 + 0.2,
+                    speedX: (Math.random() - 0.5) * 0.5,
+                    speedY: (Math.random() - 0.5) * 0.5 + 0.2,
+                });
+            }
         }
-        starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-        const starMaterial = new THREE.PointsMaterial({ color: 0xff6688, size: 0.08, transparent: true, opacity: 0.4 });
-        const stars = new THREE.Points(starGeometry, starMaterial);
-        scene.add(stars);
 
-        let time = 0;
-        function animate() {
-            requestAnimationFrame(animate);
-            time += 0.012;
-
-            // Animate particles rotation
-            particles.rotation.y = time * 0.05;
-            particles.rotation.x = Math.sin(time * 0.2) * 0.1;
-
-            // Animate lines
-            const lines = scene.children.filter(c => c.isLine);
-            lines.forEach((line, idx) => {
-                const offset = Math.sin(time * 0.5 + idx) * 0.2;
-                line.position.y = -2 + offset;
-            });
-
-            // Rotate stars slowly
-            stars.rotation.y = time * 0.02;
-
-            // Pulsing lights
-            const intensity = 0.6 + Math.sin(time * 1.5) * 0.2;
-            pointLight1.intensity = intensity;
-            pointLight2.intensity = 0.4 + Math.sin(time * 1.2) * 0.15;
-
-            camera.position.x = Math.sin(time * 0.1) * 0.3;
-            camera.position.y = 4 + Math.sin(time * 0.2) * 0.1;
-            camera.lookAt(0, 0, 0);
-
-            renderer.render(scene, camera);
+        function drawGlitter() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let p of particles) {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 51, 102, ${p.alpha})`;
+                ctx.fill();
+                p.x += p.speedX;
+                p.y += p.speedY;
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
+            }
+            requestAnimationFrame(drawGlitter);
         }
-        animate();
 
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            resizeCanvas();
+            particles = [];
+            createParticles();
         });
-    </script>
+        resizeCanvas();
+        createParticles();
+        drawGlitter();
 
-    <script>
+        // Login logic
         const users = [
             { email: "master@attendance.com", password: "master123", role: "master", fullname: "Master Admin" },
             { email: "cs@attendance.com", password: "cs123", role: "cs", fullname: "CS User" },
@@ -307,7 +97,7 @@
             }
             const user = users.find(u => u.email === email && u.password === password);
             if (!user) {
-                errorDiv.innerHTML = '⚠️ Email atau password salah!<br>Coba: master@attendance.com / master123';
+                errorDiv.innerHTML = '⚠️ Email atau password salah!';
                 errorDiv.style.display = 'block';
                 document.getElementById('loginPassword').value = '';
                 return;
@@ -318,11 +108,9 @@
             else if (user.role === 'kapten') window.location.href = 'dashboard-kapten.html';
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('loginButton').addEventListener('click', handleLogin);
-            document.getElementById('loginPassword').addEventListener('keypress', (e) => { if (e.key === 'Enter') handleLogin(); });
-            document.getElementById('loginEmail').addEventListener('keypress', (e) => { if (e.key === 'Enter') handleLogin(); });
-        });
+        document.getElementById('loginButton').addEventListener('click', handleLogin);
+        document.getElementById('loginPassword').addEventListener('keypress', e => { if (e.key === 'Enter') handleLogin(); });
+        document.getElementById('loginEmail').addEventListener('keypress', e => { if (e.key === 'Enter') handleLogin(); });
     </script>
 </body>
 </html>
