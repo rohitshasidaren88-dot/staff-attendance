@@ -4,136 +4,584 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Master Dashboard - Staff Attendance</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
+            }
+        }
+    </script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f5f0e8; }
-        
-        /* Dashboard Layout */
-        .dashboard { display: flex; min-height: 100vh; }
-        
-        /* Sidebar */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0508;
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Canvas 3D Background */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Glassmorphism Dashboard */
+        .dashboard {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Glass */
         .sidebar {
             width: 280px;
-            background: linear-gradient(180deg, #1a2a3a, #0f1a24);
+            background: rgba(10, 5, 8, 0.75);
+            backdrop-filter: blur(12px);
             color: white;
             position: fixed;
             height: 100vh;
             overflow-y: auto;
+            z-index: 20;
+            border-right: 1px solid rgba(255, 51, 102, 0.3);
+            transition: all 0.3s;
         }
-        .sidebar-header { padding: 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .sidebar-header h2 i { color: #c4a962; margin-right: 10px; }
-        .user-profile-sidebar { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .user-avatar { width: 60px; height: 60px; background: linear-gradient(135deg, #c4a962, #b38f40); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 24px; font-weight: bold; }
-        .user-name-sidebar { font-weight: 600; margin-bottom: 5px; }
-        .user-role-sidebar { font-size: 12px; color: #c4a962; }
-        .sidebar-menu { padding: 20px 0; }
-        .menu-item { padding: 12px 20px; display: flex; align-items: center; gap: 12px; color: #ccc; cursor: pointer; transition: all 0.3s; border-left: 3px solid transparent; }
-        .menu-item:hover, .menu-item.active { background: rgba(196,169,98,0.1); border-left-color: #c4a962; color: #e8d9b0; }
-        .menu-item i { width: 24px; }
-        .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px; }
-        
-        /* Main Content */
-        .main-content { margin-left: 280px; padding: 20px 30px; width: 100%; }
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #e0d4c4; }
-        .page-title { font-size: 24px; font-weight: 600; }
-        .top-actions { display: flex; gap: 10px; }
-        .btn-icon { background: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
-        .btn-logout { background: #dc3545; color: white; border: none; padding: 8px 20px; border-radius: 30px; cursor: pointer; }
-        
-        /* Cards */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px; }
-        .stat-card { background: white; border-radius: 20px; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .stat-number { font-size: 32px; font-weight: 700; color: #c4a962; }
-        .card { background: white; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .card-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #c4a962; }
-        
+
+        .sidebar-header {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 51, 102, 0.3);
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            background: linear-gradient(135deg, #ff3366, #ff6688);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .sidebar-header h2 i {
+            color: #ff3366;
+            margin-right: 10px;
+        }
+
+        .user-profile-sidebar {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 51, 102, 0.3);
+        }
+
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #ff3366, #ff6688);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 28px;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.5);
+            animation: avatarPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes avatarPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 51, 102, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(255, 51, 102, 0.8); }
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name-sidebar {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .user-role-sidebar {
+            font-size: 12px;
+            color: #ff6688;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 51, 102, 0.1);
+            color: #ff6688;
+            border-left-color: #ff3366;
+        }
+
+        .menu-item.active {
+            background: rgba(255, 51, 102, 0.15);
+            border-left-color: #ff3366;
+            color: #ff6688;
+            text-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+        }
+
+        .menu-item i {
+            width: 24px;
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 51, 102, 0.3);
+            margin-top: 20px;
+        }
+
+        /* Main Content Glass */
+        .main-content {
+            margin-left: 280px;
+            padding: 20px 30px;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 51, 102, 0.3);
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #ff3366, #ff6688);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-icon {
+            background: rgba(255, 51, 102, 0.1);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: #ff6688;
+            transition: all 0.3s;
+        }
+
+        .btn-icon:hover {
+            background: rgba(255, 51, 102, 0.3);
+            box-shadow: 0 0 15px rgba(255, 51, 102, 0.4);
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, #ff3366, #cc2255);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.5);
+        }
+
+        /* Glass Cards */
+        .card {
+            background: rgba(15, 10, 15, 0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 51, 102, 0.8);
+            box-shadow: 0 0 30px rgba(255, 51, 102, 0.3);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ff3366;
+            display: inline-block;
+        }
+
+        .card-title i {
+            margin-right: 8px;
+            color: #ff3366;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(15, 10, 15, 0.5);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff3366;
+            box-shadow: 0 0 25px rgba(255, 51, 102, 0.4);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ff6688;
+            margin: 10px 0;
+        }
+
         /* Portal Status */
-        .portal-status { text-align: center; padding: 20px; border-radius: 20px; margin-bottom: 25px; }
-        .portal-open { background: linear-gradient(135deg, rgba(40,167,69,0.2), rgba(40,167,69,0.05)); border: 2px solid #28a745; animation: pulse 1.5s infinite; }
-        .portal-closed { background: linear-gradient(135deg, rgba(220,53,69,0.2), rgba(220,53,69,0.05)); border: 2px solid #dc3545; }
-        @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(40,167,69,0.4); } 50% { box-shadow: 0 0 0 20px rgba(40,167,69,0); } }
-        .portal-badge { display: inline-block; padding: 10px 25px; border-radius: 50px; font-weight: 600; margin-top: 15px; }
-        .portal-badge.open { background: #28a745; color: white; }
-        .portal-badge.closed { background: #dc3545; color: white; }
-        .absen-btn { background: linear-gradient(135deg, #c4a962, #b38f40); color: white; border: none; padding: 12px 30px; border-radius: 50px; cursor: pointer; margin-top: 15px; font-weight: 600; }
-        
-        /* Tables */
-        .table-wrapper { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e0d4c4; }
-        th { background: #f5f0e8; font-weight: 600; }
-        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-        .badge-success { background: #28a745; color: white; }
-        .badge-danger { background: #dc3545; color: white; }
-        .fine-status { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; }
-        .fine-unpaid { background: #dc3545; color: white; }
-        .fine-paid { background: #28a745; color: white; }
-        .action-btn { padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer; background: #c4a962; color: white; }
-        
-        /* Shift Tables */
-        .shift-section { margin-bottom: 30px; background: white; border-radius: 16px; overflow: hidden; border: 1px solid #e0d4c4; }
-        .shift-title { background: linear-gradient(135deg, #c4a962, #b38f40); color: white; padding: 12px 20px; font-weight: 600; }
-        .shift-table { width: 100%; border-collapse: collapse; }
-        .shift-table th { background: #f5f0e8; padding: 12px; text-align: center; border-bottom: 2px solid #c4a962; }
-        .shift-table td { padding: 10px; text-align: center; border-bottom: 1px solid #e0d4c4; }
-        .shift-table select, .shift-table input { width: 95%; padding: 8px; border: 1px solid #e0d4c4; border-radius: 8px; }
-        .date-selector { background: white; padding: 15px; border-radius: 16px; margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; border: 1px solid #e0d4c4; }
-        .btn-submit { background: #c4a962; color: white; padding: 8px 20px; border: none; border-radius: 30px; cursor: pointer; }
-        
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); position: fixed; }
-            .main-content { margin-left: 0; }
-            .stats-grid { grid-template-columns: 1fr; }
+        .portal-status {
+            text-align: center;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 25px;
         }
-        
-        .mobile-menu-btn { display: none; background: #c4a962; color: white; width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer; }
-        @media (max-width: 768px) { .mobile-menu-btn { display: flex; align-items: center; justify-content: center; } .sidebar.open { transform: translateX(0); } }
+
+        .portal-open {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.15), rgba(0, 255, 136, 0.05));
+            border: 2px solid #00ff88;
+            animation: portalPulse 1.5s ease-in-out infinite;
+        }
+
+        .portal-closed {
+            background: linear-gradient(135deg, rgba(255, 51, 102, 0.15), rgba(255, 51, 102, 0.05));
+            border: 2px solid #ff3366;
+            animation: portalPulseRed 1.5s ease-in-out infinite;
+        }
+
+        @keyframes portalPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(0, 255, 136, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(0, 255, 136, 0.6); }
+        }
+
+        @keyframes portalPulseRed {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 51, 102, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(255, 51, 102, 0.6); }
+        }
+
+        .portal-badge {
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        .portal-badge.open {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .portal-badge.closed {
+            background: #ff3366;
+            color: white;
+        }
+
+        .absen-btn {
+            background: linear-gradient(135deg, #ff3366, #cc2255);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .absen-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(255, 51, 102, 0.6);
+        }
+
+        /* Tables */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 51, 102, 0.3);
+        }
+
+        th {
+            background: rgba(255, 51, 102, 0.1);
+            font-weight: 600;
+            color: #ff6688;
+        }
+
+        tr:hover {
+            background: rgba(255, 51, 102, 0.05);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+        }
+
+        .badge-danger {
+            background: rgba(255, 51, 102, 0.2);
+            color: #ff6688;
+            border: 1px solid #ff3366;
+        }
+
+        .fine-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .fine-unpaid {
+            background: rgba(255, 51, 102, 0.2);
+            color: #ff6688;
+            border: 1px solid #ff3366;
+        }
+
+        .fine-paid {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            background: rgba(255, 51, 102, 0.2);
+            color: #ff6688;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #ff3366;
+            color: white;
+            box-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+        }
+
+        /* Shift Tables */
+        .shift-section {
+            margin-bottom: 30px;
+            background: rgba(15, 10, 15, 0.5);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 51, 102, 0.3);
+        }
+
+        .shift-title {
+            background: linear-gradient(135deg, #ff3366, #cc2255);
+            color: white;
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .shift-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .shift-table th {
+            background: rgba(255, 51, 102, 0.1);
+            color: #ff6688;
+            padding: 12px;
+            text-align: center;
+            border-bottom: 2px solid #ff3366;
+        }
+
+        .shift-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 51, 102, 0.2);
+        }
+
+        .shift-table select, 
+        .shift-table input {
+            width: 95%;
+            padding: 8px;
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+        }
+
+        .date-selector {
+            background: rgba(15, 10, 15, 0.5);
+            padding: 15px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            border: 1px solid rgba(255, 51, 102, 0.3);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #ff3366, #cc2255);
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(255, 51, 102, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .mobile-menu-btn {
+                display: flex;
+                background: #ff3366;
+                color: white;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                border: none;
+                cursor: pointer;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <aside class="sidebar">
-    <div class="sidebar-header">
-        <h2><i class="fas fa-users"></i> Staff Attendance</h2>
+    <div id="canvas-container"></div>
+    
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-users"></i> Staff Attendance</h2>
+            </div>
+           <div class="user-profile-sidebar">
+    <div class="user-avatar" id="userAvatar">
+        <img src="assets/logo.png" alt="Logo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
     </div>
-    <div class="user-profile-sidebar">
-        <div class="logo-icon" style="text-align: center; margin-bottom: 15px;">
-            <img src="assets/logo.png" alt="Logo" style="width: 80px; height: 80px; object-fit: cover; border-radius: 16px;">
-        </div>
-        <div id="userAvatar" style="display: none;"></div>
-        <div class="user-name-sidebar" id="userName">Management</div>
-        <div class="user-role-sidebar" id="userRole">MASTER</div>
-    </div>
-    <div class="sidebar-menu">
-        <div class="menu-item active" data-page="dashboard">
-            <i class="fas fa-chart-pie"></i><span>Dashboard</span>
-        </div>
-        <div class="menu-item" data-page="attendance">
-            <i class="fas fa-calendar-check"></i><span>Jadwal Absen Staff</span>
-        </div>
-        <div class="menu-item" data-page="shiftCs">
-            <i class="fas fa-users"></i><span>SIFT CS</span>
-        </div>
-        <div class="menu-item" data-page="shiftKapten">
-            <i class="fas fa-user-tie"></i><span>SIFT KAPTEN</span>
-        </div>
-        <div class="menu-item" data-page="shiftKasir">
-            <i class="fas fa-coins"></i><span>SIFT KASIR</span>
-        </div>
-        <div class="menu-item" data-page="absent">
-            <i class="fas fa-exclamation-triangle"></i><span>Data Staff Tidak Absen</span>
-        </div>
-    </div>
-    <div class="sidebar-footer">
-        <div class="menu-item" id="logoutBtn">
-            <i class="fas fa-sign-out-alt"></i><span>Logout</span>
-        </div>
-    </div>
-</aside>
+    <div class="user-name-sidebar" id="userName">Management</div>
+    <div class="user-role-sidebar" id="userRole">MASTER</div>
+</div>
+            <div class="sidebar-menu">
+                <div class="menu-item active" data-page="dashboard"><i class="fas fa-chart-pie"></i><span>Dashboard</span></div>
+                <div class="menu-item" data-page="attendance"><i class="fas fa-calendar-check"></i><span>Jadwal Absen Staff</span></div>
+                <div class="menu-item" data-page="shiftCs"><i class="fas fa-users"></i><span>SIFT CS</span></div>
+                <div class="menu-item" data-page="shiftKapten"><i class="fas fa-user-tie"></i><span>SIFT KAPTEN</span></div>
+                <div class="menu-item" data-page="shiftKasir"><i class="fas fa-coins"></i><span>SIFT KASIR</span></div>
+                <div class="menu-item" data-page="absent"><i class="fas fa-exclamation-triangle"></i><span>Data Staff Tidak Absen</span></div>
+            </div>
+            <div class="sidebar-footer">
+                <div class="menu-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span>Logout</span></div>
+            </div>
+        </aside>
+        
         <main class="main-content">
             <div class="top-bar">
                 <div style="display: flex; align-items: center; gap: 15px;">
@@ -149,12 +597,12 @@
             <div id="dashboardPage">
                 <div class="stats-grid" id="statsGrid"></div>
                 <div id="portalStatus"></div>
-                <div class="card"><h3 class="card-title"><i class="fas fa-chart-line"></i> Statistik Kehadiran</h3><canvas id="attendanceChart" style="max-height: 300px;"></canvas></div>
+                <div class="card"><h3 class="card-title"><i class="fas fa-chart-line"></i> Statistik Kehadiran</h3><canvas id="attendanceChart"></canvas></div>
             </div>
             
             <div id="attendancePage" style="display: none;">
                 <div class="card"><h3 class="card-title"><i class="fas fa-calendar-check"></i> Rekap Absensi Staff</h3>
-                    <div class="table-wrapper"> <table id="attendanceTable"><thead><th>Nama Staff</th><th>Status</th><th>Check-In</th><th>Shift</th><th>Denda</th></thead><tbody id="attendanceTableBody"></tbody></table></div>
+                    <div class="table-wrapper"> <table id="attendanceTable"><thead><th>Nama Staff</th><th>Status</th><th>Check-In</th><th>Shift</th><th>Denda</th></thead><tbody id="attendanceTableBody"></tbody>}</div>
                 </div>
             </div>
             
@@ -196,11 +644,178 @@
             
             <div id="absentPage" style="display: none;">
                 <div class="card"><h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> Staff Belum Absen</h3>
-                    <div class="table-wrapper"><table id="absentTable"><thead><th>Nama Staff</th><th>Role</th><th>Status</th><th>Denda</th><th>Aksi</th></thead><tbody id="absentTableBody"></tbody></table></div>
+                    <div class="table-wrapper"><table id="absentTable"><thead><th>Nama Staff</th><th>Role</th><th>Status</th><th>Denda</th><th>Aksi</th></thead><tbody id="absentTableBody"></tbody>}</div>
                 </div>
             </div>
         </main>
     </div>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        // Setup scene, camera, renderer
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0508);
+        scene.fog = new THREE.FogExp2(0x0a0508, 0.008);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 5, 18);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0x222222);
+        scene.add(ambientLight);
+        
+        const pointLight1 = new THREE.PointLight(0xff3366, 0.8);
+        pointLight1.position.set(5, 10, 5);
+        scene.add(pointLight1);
+        
+        const pointLight2 = new THREE.PointLight(0xff6688, 0.5);
+        pointLight2.position.set(-5, 5, -5);
+        scene.add(pointLight2);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        directionalLight.position.set(0, 10, 0);
+        scene.add(directionalLight);
+
+        // Create neon cubes grid
+        const cubes = [];
+        const size = 14;
+        const spacing = 1.15;
+        const offset = size * spacing / 2;
+        
+        const cubeGeometry = new THREE.BoxGeometry(0.92, 0.92, 0.92);
+        const edgesGeometry = new THREE.EdgesGeometry(cubeGeometry);
+        
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                const x = i * spacing - offset;
+                const z = j * spacing - offset;
+                const yBase = -1.2 + Math.random() * 0.8;
+                
+                // Random red shade
+                const intensity = 0.3 + Math.random() * 0.5;
+                const material = new THREE.MeshStandardMaterial({
+                    color: new THREE.Color(1, 0.2 + intensity * 0.3, 0.2 + intensity * 0.3),
+                    emissive: new THREE.Color(0.5, 0, 0),
+                    emissiveIntensity: 0.2 + intensity * 0.3,
+                    metalness: 0.7,
+                    roughness: 0.3,
+                    transparent: true,
+                    opacity: 0.85
+                });
+                
+                const cube = new THREE.Mesh(cubeGeometry, material);
+                cube.position.set(x, yBase, z);
+                cube.userData = {
+                    startY: yBase,
+                    speed: 0.5 + Math.random() * 0.5,
+                    offset: Math.random() * Math.PI * 2
+                };
+                scene.add(cube);
+                cubes.push(cube);
+                
+                // Add neon edges
+                const edges = new THREE.LineSegments(edgesGeometry, new THREE.LineBasicMaterial({ color: 0xff3366 }));
+                cube.add(edges);
+            }
+        }
+
+        // Create glitter particles
+        const particleCount = 3000;
+        const particleGeometry = new THREE.BufferGeometry();
+        const particlePositions = new Float32Array(particleCount * 3);
+        const particleColors = new Float32Array(particleCount * 3);
+        
+        for (let i = 0; i < particleCount; i++) {
+            particlePositions[i*3] = (Math.random() - 0.5) * 35;
+            particlePositions[i*3+1] = (Math.random() - 0.5) * 18;
+            particlePositions[i*3+2] = (Math.random() - 0.5) * 25 - 5;
+            
+            const redIntensity = 0.7 + Math.random() * 0.3;
+            particleColors[i*3] = 1;
+            particleColors[i*3+1] = 0.2 + Math.random() * 0.4;
+            particleColors[i*3+2] = 0.2 + Math.random() * 0.4;
+        }
+        
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+        particleGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+        
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.045,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending
+        });
+        
+        const particles = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particles);
+
+        // Stars background
+        const starGeometry = new THREE.BufferGeometry();
+        const starCount = 1500;
+        const starPositions = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount; i++) {
+            starPositions[i*3] = (Math.random() - 0.5) * 200;
+            starPositions[i*3+1] = (Math.random() - 0.5) * 100;
+            starPositions[i*3+2] = (Math.random() - 0.5) * 80 - 40;
+        }
+        starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+        const starMaterial = new THREE.PointsMaterial({ color: 0xff6688, size: 0.08, transparent: true, opacity: 0.4 });
+        const stars = new THREE.Points(starGeometry, starMaterial);
+        scene.add(stars);
+
+        // Animation variables
+        let time = 0;
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.012;
+            
+            // Animate cubes - wave motion
+            cubes.forEach((cube, idx) => {
+                const waveY = Math.sin(time * 0.6 + cube.position.x * 0.4 + cube.position.z * 0.4) * 0.18;
+                cube.position.y = cube.userData.startY + waveY;
+                cube.rotation.x = Math.sin(time * 0.5 + cube.position.x) * 0.08;
+                cube.rotation.z = Math.cos(time * 0.5 + cube.position.z) * 0.08;
+            });
+            
+            // Rotate particles
+            particles.rotation.y = time * 0.08;
+            particles.rotation.x = Math.sin(time * 0.2) * 0.1;
+            stars.rotation.y = time * 0.02;
+            
+            // Animate lights
+            const lightIntensity = 0.6 + Math.sin(time * 1.5) * 0.2;
+            pointLight1.intensity = lightIntensity;
+            pointLight2.intensity = 0.4 + Math.sin(time * 1.2) * 0.15;
+            
+            // Slight camera movement
+            camera.position.x = Math.sin(time * 0.1) * 0.3;
+            camera.position.y = 5 + Math.sin(time * 0.2) * 0.1;
+            camera.lookAt(0, 0, 0);
+            
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', onWindowResize, false);
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+    </script>
 
     <script>
         // ==================== DATA STAFF ====================
@@ -341,7 +956,7 @@
                 if (attendanceChart) attendanceChart.destroy();
                 attendanceChart = new Chart(ctx, {
                     type: 'doughnut',
-                    data: { labels: ['Hadir', 'Tidak Hadir'], datasets: [{ data: [hadir, tidakHadir], backgroundColor: ['#28a745', '#dc3545'] }] },
+                    data: { labels: ['Hadir', 'Tidak Hadir'], datasets: [{ data: [hadir, tidakHadir], backgroundColor: ['#00ff88', '#ff3366'] }] },
                     options: { responsive: true }
                 });
             }
@@ -356,7 +971,7 @@
                 const name = allStaff[i];
                 const att = attendanceData[name] || { status: 'belum', checkInTime: null, shift: null };
                 const fine = fineData[name] || { amount: 0, paid: false };
-                tbody.innerHTML += '<tr><td>' + name + '</td><td><span class="badge ' + (att.status === 'sudah' ? 'badge-success' : 'badge-danger') + '">' + (att.status === 'sudah' ? 'SUDAH ABSEN' : 'BELUM ABSEN') + '</span></td><td>' + (att.checkInTime || '-') + '</td><td>' + (att.shift || '-') + '</td><td><span class="fine-status ' + (fine.paid ? 'fine-paid' : 'fine-unpaid') + '" onclick="markFinePaid(\'' + name + '\')">' + (fine.paid ? 'DONE' : fine.amount + ' Bath') + '</span></td></tr>';
+                tbody.innerHTML += ' <tr><td>' + name + '</td><td><span class="badge ' + (att.status === 'sudah' ? 'badge-success' : 'badge-danger') + '">' + (att.status === 'sudah' ? 'SUDAH ABSEN' : 'BELUM ABSEN') + '</span></td><td>' + (att.checkInTime || '-') + '</td><td>' + (att.shift || '-') + '</td><td><span class="fine-status ' + (fine.paid ? 'fine-paid' : 'fine-unpaid') + '" onclick="markFinePaid(\'' + name + '\')">' + (fine.paid ? 'DONE' : fine.amount + ' Bath') + '</span></td></tr>';
             }
         }
 
@@ -371,7 +986,7 @@
                 if (att && att.status !== 'sudah') {
                     const fine = fineData[name] || { amount: 0, paid: false };
                     let role = staffData.cs.includes(name) ? 'CS' : (staffData.kapten.includes(name) ? 'KAPTEN' : 'KASIR');
-                    tbody.innerHTML += '<tr><td>' + name + '</td><td>' + role + '</td><td><span class="badge badge-danger">BELUM ABSEN</span></td><td><span class="fine-status ' + (fine.paid ? 'fine-paid' : 'fine-unpaid') + '" onclick="markFinePaid(\'' + name + '\')">' + (fine.paid ? 'DONE' : fine.amount + ' Bath') + '</span></td><td><button class="action-btn" onclick="markFinePaid(\'' + name + '\')">Bayar Denda</button></td></tr>';
+                    tbody.innerHTML += ' <tr><td>' + name + '</td><td>' + role + '</td><td><span class="badge badge-danger">BELUM ABSEN</span></td><td><span class="fine-status ' + (fine.paid ? 'fine-paid' : 'fine-unpaid') + '" onclick="markFinePaid(\'' + name + '\')">' + (fine.paid ? 'DONE' : fine.amount + ' Bath') + '</span></td><td><button class="action-btn" onclick="markFinePaid(\'' + name + '\')">Bayar Denda</button></td></tr>';
                 }
             }
         }
@@ -456,8 +1071,7 @@
             for (let i = 0; i < kaptenList.length; i++) {
                 const s = kaptenList[i];
                 html += '<tr><td><select class="kapten-staff">' + staffData.kapten.map(n => `<option value="${n}" ${n === s.name ? 'selected' : ''}>${n}</option>`).join('') + '</select></td>';
-                html += '<td><input type="time" value="' + s.checkIn + '"></td>';
-                html += '<td><input type="time" value="' + s.checkOut + '"></td>';
+                html += '<td><input type="time" value="' + s.checkIn + '"></td><td><input type="time" value="' + s.checkOut + '"></td>';
                 html += '<td>' + s.jadwal + '</td></tr>';
             }
             html += '</tbody></table></div>';
@@ -508,8 +1122,7 @@
             for (let i = 0; i < kasirList.length; i++) {
                 const s = kasirList[i];
                 html += '<tr><td><select class="kasir-staff">' + staffData.kasir.map(n => `<option value="${n}" ${n === s.name ? 'selected' : ''}>${n}</option>`).join('') + '</select></td>';
-                html += '<td><input type="time" value="' + s.checkIn + '"></td>';
-                html += '<td><input type="time" value="' + s.checkOut + '"></td>';
+                html += '<td><input type="time" value="' + s.checkIn + '"></td><td><input type="time" value="' + s.checkOut + '"></td>';
                 html += '<td>' + s.jadwal + '</td></tr>';
             }
             html += '</tbody></table></div>';
@@ -541,20 +1154,10 @@
             const pages = ['dashboard', 'attendance', 'shiftCs', 'shiftKapten', 'shiftKasir', 'absent'];
             for (let i = 0; i < pages.length; i++) {
                 const el = document.getElementById(pages[i] + 'Page');
-                if (el) {
-                    el.style.display = (pages[i] === pageId) ? 'block' : 'none';
-                }
+                if (el) el.style.display = (pages[i] === pageId) ? 'block' : 'none';
             }
-            const titles = {
-                dashboard: 'Dashboard',
-                attendance: 'Jadwal Absen Staff',
-                shiftCs: 'SIFT CS',
-                shiftKapten: 'SIFT KAPTEN',
-                shiftKasir: 'SIFT KASIR',
-                absent: 'Data Staff Tidak Absen'
-            };
+            const titles = { dashboard: 'Dashboard', attendance: 'Jadwal Absen Staff', shiftCs: 'SIFT CS', shiftKapten: 'SIFT KAPTEN', shiftKasir: 'SIFT KASIR', absent: 'Data Staff Tidak Absen' };
             document.getElementById('pageTitle').innerHTML = titles[pageId] || 'Dashboard';
-            
             if (pageId === 'dashboard') renderDashboard();
             if (pageId === 'attendance') renderAttendanceTable();
             if (pageId === 'shiftCs') renderShiftCS();
@@ -566,8 +1169,6 @@
         function initTheme() {
             if (localStorage.getItem('theme') === 'dark') {
                 document.body.classList.add('dark');
-                const btns = document.querySelectorAll('#themeToggle, #themeToggleFloat');
-                for (let i = 0; i < btns.length; i++) btns[i].innerHTML = '<i class="fas fa-sun"></i>';
             }
         }
 
@@ -575,9 +1176,6 @@
             document.body.classList.toggle('dark');
             const isDark = document.body.classList.contains('dark');
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            const icon = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-            const btns = document.querySelectorAll('#themeToggle, #themeToggleFloat');
-            for (let i = 0; i < btns.length; i++) btns[i].innerHTML = icon;
         }
 
         function logout() {
@@ -617,27 +1215,6 @@
         });
         
         window.markFinePaid = markFinePaid;
-        function createGlitterParticles() {
-    const body = document.body;
-    for (let i = 0; i < 60; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'glitter-particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
-        particle.style.width = (Math.random() * 4 + 1) + 'px';
-        particle.style.height = particle.style.width;
-        particle.style.animationDelay = Math.random() * 8 + 's';
-        particle.style.animationDuration = (Math.random() * 6 + 4) + 's';
-        document.body.appendChild(particle);
-    }
-}
-
-// Panggil fungsi setelah halaman dimuat
-document.addEventListener('DOMContentLoaded', function() {
-    createGlitterParticles();
-    // refresh particles setiap 10 detik untuk efek dinamis
-    setInterval(createGlitterParticles, 10000);
-});
     </script>
 </body>
 </html>
